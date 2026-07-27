@@ -1,37 +1,56 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import random
 
-# Configuração inicial da página
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="📦", layout="wide")
 
 # --- INJEÇÃO DE CSS PARA O TEMA CEVA LOGISTICS ---
 st.markdown("""
     <style>
-        /* Títulos principais em Azul CEVA */
+        /* 1. Fundo Branco com Marca d'água da CEVA transparente (92% de transparência) */
+        .stApp {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), 
+            url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png");
+            background-size: 50vw;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* 2. Menu Lateral Azul Marinho com Letras Brancas */
+        [data-testid="stSidebar"] {
+            background-color: #001439 !important;
+        }
+        [data-testid="stSidebar"] * {
+            color: #ffffff !important;
+        }
+
+        /* 3. Títulos da página principal em Azul CEVA */
         h1, h2, h3 {
             color: #001439 !important;
         }
-        /* Estilização do botão de exportação (Vermelho CEVA) */
-        div.stButton > button:first-child {
-            background-color: #e3000f;
-            color: white;
-            border: none;
-            font-weight: bold;
+
+        /* 4. Botão de Exportar em Vermelho CEVA */
+        div.stButton > button {
+            background-color: #e3000f !important;
+            color: white !important;
+            border-radius: 8px !important;
+            border: none !important;
+            font-weight: bold !important;
         }
-        div.stButton > button:first-child:hover {
-            background-color: #b3000b;
-            color: white;
+        div.stButton > button:hover {
+            background-color: #b3000b !important;
         }
+        
         /* Ocultar o menu padrão do Streamlit para um visual mais limpo */
         #MainMenu {visibility: hidden;}
         header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL
-# Adicionando a Logo da CEVA no topo
-st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/1024px-CEVA_Logistics_Logo.svg.png", use_container_width=True)
+# 1. SIDEBAR / MENU LATERAL (Logo em Texto para evitar bloqueios de rede)
+st.sidebar.markdown("<h1 style='text-align: center; font-size: 3.5em; margin-bottom: -20px;'>CEVA</h1><h3 style='text-align: center; color: #e3000f; margin-top: 0; letter-spacing: 2px;'>LOGISTICS</h3>", unsafe_allow_html=True)
 st.sidebar.markdown("---")
 
 st.sidebar.header("⚙️ Configurações do Lote")
@@ -71,7 +90,6 @@ else:
         df_plan_raw = pd.read_excel(file_plan, sheet_name="PLANEJAMENTO")
         df_plan = df_plan_raw.copy()
         
-        # Nomeando colunas vazias para não bugar o gráfico
         cabecalhos = df_plan.iloc[1]
         df_plan.columns = [str(c) if pd.notna(c) else f"coluna_{i}" for i, c in enumerate(cabecalhos)]
         
@@ -85,10 +103,8 @@ else:
             lambda x: x.split('-')[0].upper() if '-' in str(x) else str(x).upper()
         )
 
-        # Agrupar posições reais do SAP por SKU
         sap_locs = df_sap.groupby('SKU')['Prefix'].apply(lambda x: set(x)).to_dict()
 
-        # Identificar se é PENDENTE
         def verificar_pendencia(row):
             for col in ['1ª contagem', '2ª contagem', '3ª contagem']:
                 if 'PENDENTE' in str(row[col]).upper():
@@ -97,7 +113,6 @@ else:
 
         df_plan['PENDENTE'] = df_plan.apply(verificar_pendencia, axis=1)
 
-        # Validar tipos de locação (Planejamento vs SAP)
         loc_cols = ['LN', 'PC', 'PK', 'PP', 'PR', 'PD']
 
         def validar_locacoes(row):
@@ -119,7 +134,6 @@ else:
         df_plan['EXPECTED'] = [r[1] for r in val_results]
         df_plan['ACTUAL'] = [r[2] for r in val_results]
 
-        # Categorização de Status
         def classificar_status(row):
             if not row['PENDENTE']:
                 return "Já Contado"
@@ -131,13 +145,11 @@ else:
         df_plan['STATUS_GERAL'] = df_plan.apply(classificar_status, axis=1)
         df_plan['TOTAL POSIÇÕES'] = pd.to_numeric(df_plan['TOTAL POSIÇÕES'], errors='coerce').fillna(0).astype(int)
 
-        # CRIAÇÃO DAS ABAS NA TELA
         tab1, tab2 = st.tabs(["📋 Planejamento Diário (Lote)", "📊 Dashboard Gerencial"])
 
         with tab1:
             st.subheader("🎯 Seleção Automática de Lote para Contagem")
             
-            # MÁSCARA PARA A CURVA A COM O FILTRO
             mask_a = (df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'A')
             if filtro_curva_a != "Todas":
                 mask_a = mask_a & df_plan[filtro_curva_a].astype(str).str.upper().str.contains('PENDENTE')
@@ -146,7 +158,6 @@ else:
             df_disp_b = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'B')]
             df_disp_c = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'C')]
 
-            # Motor de otimização de capacidade
             def otimizar_lote(df_a, df_b, df_c, q_a, q_b, q_c, min_l, max_l):
                 melhor_lote = pd.concat([df_a.head(q_a), df_b.head(q_b), df_c.head(q_c)])
                 if melhor_lote.empty:
@@ -184,7 +195,6 @@ else:
             col_m2.metric("Total de Locações do Lote", total_locacoes_lote)
             col_m3.metric("Meta de Locações", f"{min_loc} - {max_loc}")
 
-            # Validação do intervalo de capacidade
             if min_loc <= total_locacoes_lote <= max_loc:
                 st.success("✅ O lote selecionado está DENTRO da média de locações planejada!")
             elif total_locacoes_lote < min_loc:
@@ -196,7 +206,6 @@ else:
             df_display = lote_sugerido[['SKU', 'Curva ABC', 'TOTAL POSIÇÕES', '1ª contagem', '2ª contagem', '3ª contagem', 'LN', 'PC', 'PK', 'PP', 'PR', 'PD']].reset_index(drop=True)
             st.dataframe(df_display, use_container_width=True)
 
-            # Botão para exportar lote para Excel
             @st.cache_data
             def convert_df(df):
                 return df.to_csv(index=False, sep=';').encode('utf-8')
@@ -212,7 +221,6 @@ else:
         with tab2:
             st.subheader("📊 Panorama do Inventário Cíclico")
             
-            # Gráficos de Status (COM CORES DA CEVA)
             col_g1, col_g2 = st.columns(2)
 
             with col_g1:
@@ -234,7 +242,6 @@ else:
             with col_g2:
                 df_disp_only = df_plan[df_plan['STATUS_GERAL'] == "Disponível para Contar"]
                 
-                # Tratamento caso não tenha itens disponíveis
                 if not df_disp_only.empty:
                     fig_loc = px.pie(
                         df_disp_only, 
