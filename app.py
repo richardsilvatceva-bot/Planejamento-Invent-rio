@@ -1,14 +1,39 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import random
 
-st.set_page_config(page_title="Gestão de Inventário Cíclico", layout="wide")
+# Configuração inicial da página
+st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="📦", layout="wide")
 
-st.title("📦 Sistema de Planejamento e Análise de Inventário Cíclico")
-st.markdown("---")
+# --- INJEÇÃO DE CSS PARA O TEMA CEVA LOGISTICS ---
+st.markdown("""
+    <style>
+        /* Títulos principais em Azul CEVA */
+        h1, h2, h3 {
+            color: #001439 !important;
+        }
+        /* Estilização do botão de exportação (Vermelho CEVA) */
+        div.stButton > button:first-child {
+            background-color: #e3000f;
+            color: white;
+            border: none;
+            font-weight: bold;
+        }
+        div.stButton > button:first-child:hover {
+            background-color: #b3000b;
+            color: white;
+        }
+        /* Ocultar o menu padrão do Streamlit para um visual mais limpo */
+        #MainMenu {visibility: hidden;}
+        header {visibility: hidden;}
+    </style>
+""", unsafe_allow_html=True)
 
-# 1. SIDEBAR / CONFIGURAÇÕES DE PLANEJAMENTO
+# 1. SIDEBAR / MENU LATERAL
+# Adicionando a Logo da CEVA no topo
+st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/1024px-CEVA_Logistics_Logo.svg.png", use_container_width=True)
+st.sidebar.markdown("---")
+
 st.sidebar.header("⚙️ Configurações do Lote")
 
 st.sidebar.subheader("Meta de SKUs por Curva")
@@ -34,8 +59,12 @@ st.sidebar.subheader("📂 Upload dos Arquivos")
 file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["xlsx"])
 file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 
+# TÍTULO DA PÁGINA PRINCIPAL
+st.title("📦 Sistema de Planejamento de Inventário Cíclico")
+st.markdown("---")
+
 if file_plan is None or file_sap is None:
-    st.info("👈 Por favor, faça o upload das duas planilhas na barra lateral para iniciar a análise.")
+    st.info("👈 Por favor, faça o upload das duas planilhas no menu lateral para iniciar a análise.")
 else:
     try:
         # CARREGAR E TRATAR PLANILHA DE PLANEJAMENTO
@@ -117,7 +146,7 @@ else:
             df_disp_b = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'B')]
             df_disp_c = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'C')]
 
-            # --- NOVO MOTOR DE OTIMIZAÇÃO DE CAPACIDADE ---
+            # Motor de otimização de capacidade
             def otimizar_lote(df_a, df_b, df_c, q_a, q_b, q_c, min_l, max_l):
                 melhor_lote = pd.concat([df_a.head(q_a), df_b.head(q_b), df_c.head(q_c)])
                 if melhor_lote.empty:
@@ -125,9 +154,8 @@ else:
                     
                 soma_inicial = melhor_lote['TOTAL POSIÇÕES'].sum()
                 if min_l <= soma_inicial <= max_l:
-                    return melhor_lote # Bateu a meta de primeira
+                    return melhor_lote 
                 
-                # Se não bateu a meta, tenta até 2000 combinações diferentes para achar os SKUs certos
                 menor_distancia = min(abs(soma_inicial - min_l), abs(soma_inicial - max_l))
                 
                 for _ in range(2000):
@@ -139,9 +167,8 @@ else:
                     soma_temp = lote_temp['TOTAL POSIÇÕES'].sum()
                     
                     if min_l <= soma_temp <= max_l:
-                        return lote_temp # Achou a combinação perfeita!
+                        return lote_temp 
                     
-                    # Guarda a que chegou mais perto caso não ache a perfeita
                     dist = min(abs(soma_temp - min_l), abs(soma_temp - max_l))
                     if dist < menor_distancia:
                         menor_distancia = dist
@@ -151,7 +178,6 @@ else:
 
             lote_sugerido = otimizar_lote(df_disp_a, df_disp_b, df_disp_c, qtd_a, qtd_b, qtd_c, min_loc, max_loc)
             total_locacoes_lote = lote_sugerido['TOTAL POSIÇÕES'].sum()
-            # ----------------------------------------------
 
             col_m1, col_m2, col_m3 = st.columns(3)
             col_m1.metric("SKUs Selecionados", len(lote_sugerido))
@@ -186,7 +212,7 @@ else:
         with tab2:
             st.subheader("📊 Panorama do Inventário Cíclico")
             
-            # Gráficos de Status
+            # Gráficos de Status (COM CORES DA CEVA)
             col_g1, col_g2 = st.columns(2)
 
             with col_g1:
@@ -197,9 +223,9 @@ else:
                     title="Status dos SKUs por Curva ABC",
                     barmode="group",
                     color_discrete_map={
-                        "Já Contado": "#2ca02c",
-                        "Disponível para Contar": "#1f77b4",
-                        "Bloqueado (Divergência de Posição)": "#d62728"
+                        "Já Contado": "#8a8d91", # Cinza
+                        "Disponível para Contar": "#001439", # Azul CEVA
+                        "Bloqueado (Divergência de Posição)": "#e3000f" # Vermelho CEVA
                     }
                 )
                 fig_status.update_layout(yaxis_title="Quantidade de SKUs")
@@ -214,7 +240,13 @@ else:
                         df_disp_only, 
                         names="Curva ABC", 
                         values="TOTAL POSIÇÕES", 
-                        title="Distribuição de Locações Disponíveis por Curva"
+                        title="Distribuição de Locações Disponíveis por Curva",
+                        color="Curva ABC",
+                        color_discrete_map={
+                            "A": "#001439", # Azul CEVA
+                            "B": "#e3000f", # Vermelho CEVA
+                            "C": "#8a8d91"  # Cinza
+                        }
                     )
                     st.plotly_chart(fig_loc, use_container_width=True)
                 else:
