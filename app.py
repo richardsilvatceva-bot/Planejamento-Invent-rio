@@ -14,32 +14,44 @@ st.markdown("""
             color: #001439 !important;
         }
 
-        /* 1. Fundo Branco com Marca d'água da CEVA transparente - Ajustado para ser menor e mais alto */
+        /* 1. Fundo Branco com Marca d'água da CEVA transparente */
         .stApp {
             background-image: linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)), 
             url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png");
-            background-size: 300px; /* Tamanho bem menor que 50vw */
-            background-position: center 10%; /* Posicionado mais acima na tela */
+            background-size: 300px;
+            background-position: center 10%;
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
 
-        /* 2. Menu Lateral Azul Marinho com Letras Brancas para legibilidade */
+        /* 2. Menu Lateral Azul Marinho com Letras Brancas */
         [data-testid="stSidebar"] {
             background-color: #001439 !important;
         }
         [data-testid="stSidebar"] * {
             color: #ffffff !important;
         }
-        /* Garantir que as labels de number inputs e radio buttons sejam brancas no sidebar */
-        [data-testid="stSidebar"] .stNumberInput > label {
-            color: #ffffff !important;
+        
+        /* 3. Inputs (caixas de digitar) no Sidebar em Azul */
+        [data-testid="stSidebar"] div[data-baseweb="input"] > div {
+            background-color: #00225c !important; /* Um azul sutilmente mais claro que o fundo para destacar a caixa */
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
         }
-        [data-testid="stSidebar"] .stRadio > label {
-            color: #ffffff !important;
+        [data-testid="stSidebar"] input {
+            color: white !important;
+            -webkit-text-fill-color: white !important;
         }
 
-        /* Estilização do botão de exportação (Vermelho CEVA) */
+        /* 4. Caixas de Upload de Arquivo no Sidebar em Azul */
+        [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] {
+            background-color: #00225c !important;
+            border: 1px dashed rgba(255, 255, 255, 0.6) !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] * {
+            color: white !important;
+        }
+
+        /* Estilização do botão de exportação principal (Vermelho CEVA) */
         div.stButton > button {
             background-color: #e3000f !important;
             color: white !important;
@@ -58,7 +70,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL (Logo em Texto para evitar bloqueios de rede, Turn 7 style)
+# 1. SIDEBAR / MENU LATERAL
 st.sidebar.markdown("""
     <div style='display: flex; align-items: center; justify-content: center; margin-top: -10px;'>
         <span style='font-size: 2.2em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
@@ -95,7 +107,7 @@ st.sidebar.subheader("📂 Upload dos Arquivos")
 file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["xlsx"])
 file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 
-# TÍTULO DA PÁGINA PRINCIPAL (Design CEVA limpo, com logo em texto para confiabilidade, e título CEVA Blue)
+# TÍTULO DA PÁGINA PRINCIPAL
 st.markdown("""
     <div style="background-color: transparent; padding: 20px; display: flex; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.1);">
         <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
@@ -105,7 +117,6 @@ st.markdown("""
         <h1 style="color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px;">Sistema de Planejamento de Inventário Cíclico</h1>
     </div>
 """, unsafe_allow_html=True)
-
 
 if file_plan is None or file_sap is None:
     st.info("👈 Por favor, faça o upload das duas planilhas no menu lateral para iniciar a análise.")
