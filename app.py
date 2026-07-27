@@ -3,23 +3,23 @@ import pandas as pd
 import plotly.express as px
 import random
 
-# Mudança do ícone da aba do navegador para o triângulo
+# Ícone da aba do navegador
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
 
 # --- INJEÇÃO DE CSS PARA O TEMA CEVA LOGISTICS ---
 st.markdown("""
     <style>
-        /* Fundo com Marca d'água da CEVA transparente */
+        /* 1. Fundo com Marca d'água da CEVA transparente - Ajustado para ser menor e mais alto */
         .stApp {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.93)), 
+            background-image: linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)), 
             url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png");
-            background-size: 50vw;
-            background-position: center;
+            background-size: 350px; /* Tamanho bem menor */
+            background-position: center 12%; /* Posicionado mais acima na tela */
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
 
-        /* Menu Lateral Azul Marinho com Letras Brancas */
+        /* 2. Menu Lateral Azul Marinho com Letras Brancas */
         [data-testid="stSidebar"] {
             background-color: #001439 !important;
         }
@@ -27,12 +27,12 @@ st.markdown("""
             color: #ffffff !important;
         }
 
-        /* Títulos secundários em Azul CEVA */
+        /* 3. Títulos secundários em Azul CEVA */
         h2, h3 {
             color: #001439 !important;
         }
 
-        /* Botão de Exportar em Vermelho CEVA */
+        /* 4. Botão de Exportar em Vermelho CEVA */
         div.stButton > button {
             background-color: #e3000f !important;
             color: white !important;
@@ -47,7 +47,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL (Logo recriada com texto menor e símbolo ao lado)
+# 1. SIDEBAR / MENU LATERAL
 st.sidebar.markdown("""
     <div style='display: flex; align-items: center; justify-content: center; margin-top: -10px;'>
         <span style='font-size: 2.5em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
@@ -85,11 +85,13 @@ file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["
 file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 
 
-# TÍTULO DA PÁGINA PRINCIPAL (Fundo Azul, Texto Branco e Símbolo CEVA)
+# TÍTULO DA PÁGINA PRINCIPAL (Fundo Azul, Texto Branco e Logo Oficial da CEVA em bloco branco)
 st.markdown("""
-    <div style="background-color: #001439; padding: 20px; border-radius: 10px; display: flex; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <span style="color: #e3000f; font-size: 2.5em; margin-right: 20px;">▲</span>
-        <h1 style="color: #ffffff !important; margin: 0; font-size: 2.2em; padding-top: 5px;">Sistema de Planejamento de Inventário Cíclico</h1>
+    <div style="background-color: #001439; padding: 15px 20px; border-radius: 10px; display: flex; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div style="background-color: white; padding: 8px 12px; border-radius: 6px; margin-right: 20px; display: flex; align-items: center; justify-content: center;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png" style="height: 25px;">
+        </div>
+        <h1 style="color: #ffffff !important; margin: 0; font-size: 2.1em; padding-top: 5px;">Sistema de Planejamento de Inventário Cíclico</h1>
     </div>
 """, unsafe_allow_html=True)
 
