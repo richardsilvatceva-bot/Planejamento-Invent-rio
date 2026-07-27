@@ -31,31 +31,17 @@ st.markdown("""
         [data-testid="stSidebar"] * {
             color: #ffffff !important;
         }
-        
-        /* --- CORREÇÃO DAS CAIXAS DE TEXTO E UPLOAD --- */
-        /* Caixas de digitação (Inputs) - Fundo branco e texto azul escuro */
-        [data-testid="stSidebar"] div[data-baseweb="input"] > div {
-            background-color: #ffffff !important;
-        }
-        [data-testid="stSidebar"] input {
-            background-color: #ffffff !important;
-            color: #001439 !important;
-            -webkit-text-fill-color: #001439 !important;
-            font-weight: bold !important;
-        }
-        
-        /* Botões de + e - dentro da caixa de números */
-        [data-testid="stSidebar"] div[data-baseweb="input"] button {
-            color: #001439 !important;
-        }
 
-        /* Caixas de Upload de Arquivo no Sidebar */
-        [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] {
-            background-color: #ffffff !important;
-            border: 2px dashed rgba(0, 20, 57, 0.5) !important;
+        /* Garantir que textos nas áreas de input/upload não fiquem invisíveis (override das regras gerais acima) */
+        [data-testid="stSidebar"] input {
+            color: #000000 !important;
+            -webkit-text-fill-color: #000000 !important;
         }
         [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] * {
-            color: #001439 !important;
+            color: #000000 !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] button * {
+             color: #000000 !important;
         }
 
         /* Estilização do botão de exportação principal (Vermelho CEVA) */
