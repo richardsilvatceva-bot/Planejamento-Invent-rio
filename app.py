@@ -3,14 +3,15 @@ import pandas as pd
 import plotly.express as px
 import random
 
-st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="📦", layout="wide")
+# Mudança do ícone da aba do navegador para o triângulo
+st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
 
 # --- INJEÇÃO DE CSS PARA O TEMA CEVA LOGISTICS ---
 st.markdown("""
     <style>
-        /* 1. Fundo com Marca d'água da CEVA transparente */
+        /* Fundo com Marca d'água da CEVA transparente */
         .stApp {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), 
+            background-image: linear-gradient(rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.93)), 
             url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png");
             background-size: 50vw;
             background-position: center;
@@ -18,7 +19,7 @@ st.markdown("""
             background-attachment: fixed;
         }
 
-        /* 2. Menu Lateral Azul Marinho com Letras Brancas */
+        /* Menu Lateral Azul Marinho com Letras Brancas */
         [data-testid="stSidebar"] {
             background-color: #001439 !important;
         }
@@ -26,12 +27,12 @@ st.markdown("""
             color: #ffffff !important;
         }
 
-        /* 3. Títulos da página principal em Azul CEVA */
-        h1, h2, h3 {
+        /* Títulos secundários em Azul CEVA */
+        h2, h3 {
             color: #001439 !important;
         }
 
-        /* 4. Botão de Exportar em Vermelho CEVA */
+        /* Botão de Exportar em Vermelho CEVA */
         div.stButton > button {
             background-color: #e3000f !important;
             color: white !important;
@@ -46,8 +47,16 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL
-st.sidebar.markdown("<h1 style='text-align: center; font-size: 3.5em; margin-bottom: -20px;'>CEVA</h1><h3 style='text-align: center; color: #e3000f; margin-top: 0; letter-spacing: 2px;'>LOGISTICS</h3>", unsafe_allow_html=True)
+# 1. SIDEBAR / MENU LATERAL (Logo recriada com texto menor e símbolo ao lado)
+st.sidebar.markdown("""
+    <div style='display: flex; align-items: center; justify-content: center; margin-top: -10px;'>
+        <span style='font-size: 2.5em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
+        <span style='color: #e3000f; font-size: 2.2em;'>▲</span>
+    </div>
+    <div style='text-align: center; color: white; letter-spacing: 4px; font-size: 0.75em; margin-top: -10px; margin-bottom: 25px;'>
+        LOGISTICS
+    </div>
+""", unsafe_allow_html=True)
 st.sidebar.markdown("---")
 
 st.sidebar.header("⚙️ Configurações do Lote")
@@ -75,9 +84,15 @@ st.sidebar.subheader("📂 Upload dos Arquivos")
 file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["xlsx"])
 file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 
-# TÍTULO DA PÁGINA PRINCIPAL
-st.title("📦 Sistema de Planejamento de Inventário Cíclico")
-st.markdown("---")
+
+# TÍTULO DA PÁGINA PRINCIPAL (Fundo Azul, Texto Branco e Símbolo CEVA)
+st.markdown("""
+    <div style="background-color: #001439; padding: 20px; border-radius: 10px; display: flex; align-items: center; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <span style="color: #e3000f; font-size: 2.5em; margin-right: 20px;">▲</span>
+        <h1 style="color: #ffffff !important; margin: 0; font-size: 2.2em; padding-top: 5px;">Sistema de Planejamento de Inventário Cíclico</h1>
+    </div>
+""", unsafe_allow_html=True)
+
 
 if file_plan is None or file_sap is None:
     st.info("👈 Por favor, faça o upload das duas planilhas no menu lateral para iniciar a análise.")
