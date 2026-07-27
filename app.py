@@ -8,7 +8,7 @@ st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="📦", l
 # --- INJEÇÃO DE CSS PARA O TEMA CEVA LOGISTICS ---
 st.markdown("""
     <style>
-        /* 1. Fundo Branco com Marca d'água da CEVA transparente (92% de transparência) */
+        /* 1. Fundo com Marca d'água da CEVA transparente */
         .stApp {
             background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), 
             url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png");
@@ -41,15 +41,12 @@ st.markdown("""
         }
         div.stButton > button:hover {
             background-color: #b3000b !important;
+            color: white !important;
         }
-        
-        /* Ocultar o menu padrão do Streamlit para um visual mais limpo */
-        #MainMenu {visibility: hidden;}
-        header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL (Logo em Texto para evitar bloqueios de rede)
+# 1. SIDEBAR / MENU LATERAL
 st.sidebar.markdown("<h1 style='text-align: center; font-size: 3.5em; margin-bottom: -20px;'>CEVA</h1><h3 style='text-align: center; color: #e3000f; margin-top: 0; letter-spacing: 2px;'>LOGISTICS</h3>", unsafe_allow_html=True)
 st.sidebar.markdown("---")
 
@@ -231,9 +228,9 @@ else:
                     title="Status dos SKUs por Curva ABC",
                     barmode="group",
                     color_discrete_map={
-                        "Já Contado": "#8a8d91", # Cinza
-                        "Disponível para Contar": "#001439", # Azul CEVA
-                        "Bloqueado (Divergência de Posição)": "#e3000f" # Vermelho CEVA
+                        "Já Contado": "#8a8d91",
+                        "Disponível para Contar": "#001439",
+                        "Bloqueado (Divergência de Posição)": "#e3000f"
                     }
                 )
                 fig_status.update_layout(yaxis_title="Quantidade de SKUs")
@@ -250,9 +247,9 @@ else:
                         title="Distribuição de Locações Disponíveis por Curva",
                         color="Curva ABC",
                         color_discrete_map={
-                            "A": "#001439", # Azul CEVA
-                            "B": "#e3000f", # Vermelho CEVA
-                            "C": "#8a8d91"  # Cinza
+                            "A": "#001439",
+                            "B": "#e3000f",
+                            "C": "#8a8d91"
                         }
                     )
                     st.plotly_chart(fig_loc, use_container_width=True)
