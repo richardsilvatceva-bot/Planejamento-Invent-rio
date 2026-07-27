@@ -14,7 +14,7 @@ st.markdown("""
             color: #001439 !important;
         }
 
-        /* 1. Fundo Branco com Marca d'água da CEVA transparente */
+        /* 1. Fundo Branco com Marca d'água da CEVA */
         .stApp {
             background-image: linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)), 
             url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png");
@@ -32,23 +32,30 @@ st.markdown("""
             color: #ffffff !important;
         }
         
-        /* 3. Inputs (caixas de digitar) no Sidebar em Azul */
+        /* --- CORREÇÃO DAS CAIXAS DE TEXTO E UPLOAD --- */
+        /* Caixas de digitação (Inputs) - Fundo branco e texto azul escuro */
         [data-testid="stSidebar"] div[data-baseweb="input"] > div {
-            background-color: #00225c !important; /* Um azul sutilmente mais claro que o fundo para destacar a caixa */
-            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+            background-color: #ffffff !important;
         }
         [data-testid="stSidebar"] input {
-            color: white !important;
-            -webkit-text-fill-color: white !important;
+            background-color: #ffffff !important;
+            color: #001439 !important;
+            -webkit-text-fill-color: #001439 !important;
+            font-weight: bold !important;
+        }
+        
+        /* Botões de + e - dentro da caixa de números */
+        [data-testid="stSidebar"] div[data-baseweb="input"] button {
+            color: #001439 !important;
         }
 
-        /* 4. Caixas de Upload de Arquivo no Sidebar em Azul */
+        /* Caixas de Upload de Arquivo no Sidebar */
         [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] {
-            background-color: #00225c !important;
-            border: 1px dashed rgba(255, 255, 255, 0.6) !important;
+            background-color: #ffffff !important;
+            border: 2px dashed rgba(0, 20, 57, 0.5) !important;
         }
         [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] * {
-            color: white !important;
+            color: #001439 !important;
         }
 
         /* Estilização do botão de exportação principal (Vermelho CEVA) */
@@ -111,7 +118,7 @@ file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 st.markdown("""
     <div style="background-color: transparent; padding: 20px; display: flex; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.1);">
         <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-            <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1px;">ceva</span>
+            <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
             <span style="color: #e3000f; font-size: 2.0em;">▲</span>
         </div>
         <h1 style="color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px;">Sistema de Planejamento de Inventário Cíclico</h1>
