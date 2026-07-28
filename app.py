@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import random
 
 # Ícone da aba do navegador
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
@@ -14,15 +13,16 @@ st.markdown("""
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
         }
 
-        /* 2. Fundo Branco Limpo com Marca d'água elegante */
+        /* 2. Fundo Dinâmico de Grid (Padrão de Dashboard de Logística) - Zero bloqueio de rede */
         .stApp {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)), 
-            url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png");
-            background-size: 300px;
-            background-position: center 10%;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-color: #f7f9fc;
+            background-color: #f4f6f9 !important;
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px) !important;
+            background-size: 25px 25px !important;
+        }
+        
+        /* Remove a faixa branca central padrão do Streamlit */
+        .block-container, [data-testid="stAppViewBlockContainer"] {
+            background-color: transparent !important;
         }
 
         /* Títulos principais da TELA CENTRAL em Azul CEVA */
@@ -57,7 +57,7 @@ st.markdown("""
             border-radius: 6px !important;
             border: 1px solid rgba(227, 0, 15, 0.3) !important;
         }
-        /* Texto que o usuário digita fica em azul escuro para ler melhor no fundo branco */
+        /* Texto que o usuário digita fica em azul escuro */
         [data-testid="stSidebar"] input {
             color: #001439 !important;
             -webkit-text-fill-color: #001439 !important;
@@ -67,7 +67,7 @@ st.markdown("""
         /* 4. CAIXA DE UPLOAD (Arraste e Solte no Menu Lateral) */
         [data-testid="stFileUploadDropzone"] {
             background-color: #ffffff !important;
-            border: 2px dashed #e3000f !important;
+            border: 2px dashed #e3000f !important; 
             border-radius: 8px !important;
         }
         /* Textos de Upload em Vermelho */
@@ -77,7 +77,7 @@ st.markdown("""
         [data-testid="stFileUploadDropzone"] p {
             color: #e3000f !important;
         }
-        /* Botão interno de procurar arquivo no Vermelho CEVA */
+        /* Botão interno de procurar arquivo */
         [data-testid="stFileUploadDropzone"] button {
             background-color: #e3000f !important;
             color: #ffffff !important;
@@ -87,7 +87,6 @@ st.markdown("""
         [data-testid="stFileUploadDropzone"] button * {
             color: #ffffff !important;
         }
-        /* Ícone de nuvem de upload em vermelho */
         [data-testid="stFileUploadDropzone"] svg {
             fill: #e3000f !important;
             stroke: #e3000f !important;
@@ -133,23 +132,33 @@ st.markdown("""
             transform: translateY(-1px);
         }
         
-        /* Limpeza do visual do Streamlit, MAS MANTENDO A SETA */
+        /* 7. ANIMAÇÃO DA EMPILHADEIRA */
+        @keyframes drive {
+            0% { transform: translateX(-50px); }
+            100% { transform: translateX(100vw); }
+        }
+        .forklift-animation {
+            animation: drive 15s linear infinite;
+            display: inline-block;
+        }
+
+        /* Limpeza do visual do Streamlit */
         #MainMenu {visibility: hidden;}
         .stDeployButton {display: none;}
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL COM ÍCONE DE ESTOQUE DESENHADO EM CÓDIGO (À prova de bloqueio)
+# 1. SIDEBAR / MENU LATERAL COM ÍCONE DE ESTOQUE (Sem fundo branco agora)
 st.sidebar.markdown("""
-    <div style="background-color: white; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 24 24" fill="none" stroke="#001439" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
+    <div style="background-color: transparent; border: 1.5px solid rgba(227, 0, 15, 0.3); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; display: flex; flex-direction: column; align-items: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
             <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
             <line x1="12" y1="22.08" x2="12" y2="12"></line>
-            <path d="M16.5 14.5 12 17l-4.5-2.5" stroke="#e3000f" stroke-width="2"></path>
-            <path d="M16.5 9.5 12 12 7.5 9.5" stroke="#e3000f" stroke-width="2"></path>
+            <path d="M16.5 14.5 12 17l-4.5-2.5" stroke="#e3000f" stroke-width="2.5"></path>
+            <path d="M16.5 9.5 12 12 7.5 9.5" stroke="#e3000f" stroke-width="2.5"></path>
         </svg>
-        <span style="color: #e3000f; font-weight: 800; font-size: 0.95em; letter-spacing: 0.5px;">GESTÃO DE ESTOQUE</span>
+        <span style="color: #ffffff !important; font-weight: 800; font-size: 0.90em; letter-spacing: 1px;">GESTÃO DE ESTOQUE</span>
     </div>
 """, unsafe_allow_html=True)
 st.sidebar.markdown("---")
@@ -179,9 +188,30 @@ st.sidebar.subheader("📂 Upload dos Arquivos")
 file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["xlsx"])
 file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 
-# TÍTULO DA PÁGINA PRINCIPAL
+# TÍTULO DA PÁGINA PRINCIPAL COM A EMPILHADEIRA ANIMADA EM CIMA
 st.markdown("""
-    <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 30px; margin-top: -20px;">
+    <div style="width: 100%; overflow: hidden; height: 35px; margin-top: -30px; margin-bottom: 5px;">
+        <div class="forklift-animation">
+            <svg width="50" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
+                <!-- Corpo da empilhadeira vermelho -->
+                <rect x="5" y="10" width="15" height="15" rx="2" fill="#e3000f"/>
+                <!-- Cabine azul escura -->
+                <rect x="8" y="2" width="10" height="10" rx="1" fill="none" stroke="#001439" stroke-width="2.5"/>
+                <!-- Garfos e torre azuis escuros -->
+                <path d="M 20 25 L 32 25 L 32 15 L 32 8" fill="none" stroke="#001439" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="20" y1="10" x2="20" y2="25" stroke="#001439" stroke-width="2.5"/>
+                <!-- Caixa de papelão -->
+                <rect x="23" y="15" width="8" height="9" fill="#d2a679" stroke="#8b5a2b" stroke-width="1"/>
+                <!-- Detalhe da caixa -->
+                <line x1="23" y1="19" x2="31" y2="19" stroke="#8b5a2b" stroke-width="1" stroke-dasharray="2,1"/>
+                <!-- Rodas traseira e dianteira azuis escuros -->
+                <circle cx="9" cy="26" r="3" fill="#001439"/>
+                <circle cx="18" cy="26" r="3" fill="#001439"/>
+            </svg>
+        </div>
+    </div>
+    
+    <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 30px;">
         <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
             <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
             <span style="color: #e3000f; font-size: 1.9em;">▲</span>
