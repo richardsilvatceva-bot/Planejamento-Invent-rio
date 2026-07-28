@@ -22,7 +22,7 @@ st.markdown("""
             background-position: center 10%;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            background-color: #f7f9fc; /* Fundo levemente cinza claro estilo Apple/Google */
+            background-color: #f7f9fc;
         }
 
         /* Títulos principais em Azul CEVA */
@@ -110,13 +110,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL
+# 1. SIDEBAR / MENU LATERAL (Tamanho ajustado e reduzido)
 st.sidebar.markdown("""
     <div style='display: flex; align-items: center; justify-content: center; margin-top: -20px;'>
-        <span style='font-size: 2.5em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1.5px;'>ceva</span>
-        <span style='color: #e3000f; font-size: 2.2em;'>▲</span>
+        <span style='font-size: 1.8em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
+        <span style='color: #e3000f; font-size: 1.5em;'>▲</span>
     </div>
-    <div style='text-align: center; color: rgba(255,255,255,0.7); letter-spacing: 5px; font-size: 0.65em; margin-top: -10px; margin-bottom: 30px; font-weight: 600;'>
+    <div style='text-align: center; color: rgba(255,255,255,0.7); letter-spacing: 4px; font-size: 0.55em; margin-top: -8px; margin-bottom: 30px; font-weight: 600;'>
         LOGISTICS
     </div>
 """, unsafe_allow_html=True)
@@ -151,10 +151,10 @@ file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 st.markdown("""
     <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 30px; margin-top: -20px;">
         <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-            <span style="font-size: 2.4em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
-            <span style="color: #e3000f; font-size: 2.1em;">▲</span>
+            <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
+            <span style="color: #e3000f; font-size: 1.9em;">▲</span>
         </div>
-        <h1 style="color: #001439 !important; margin: 0; font-size: 2.2em; padding-top: 5px; border-left: 2px solid rgba(0,20,57,0.2); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
+        <h1 style="color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px; border-left: 2px solid rgba(0,20,57,0.2); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
     </div>
 """, unsafe_allow_html=True)
 
