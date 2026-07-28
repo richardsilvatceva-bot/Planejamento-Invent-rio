@@ -6,58 +6,105 @@ import random
 # Ícone da aba do navegador
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
 
-# --- INJEÇÃO DE CSS PARA O TEMA CEVA LOGISTICS ---
+# --- INJEÇÃO DE CSS PREMIUM (INSPIRADO EM APPLE/GOOGLE/MICROSOFT) ---
 st.markdown("""
     <style>
-        /* Títulos secundários da página principal em Azul CEVA */
-        h2, h3 {
-            color: #001439 !important;
+        /* 1. Tipografia Global Limpa (Padrão Apple / Microsoft) */
+        html, body, [class*="css"]  {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
         }
 
-        /* 1. Fundo Branco com Marca d'água da CEVA */
+        /* 2. Fundo Branco Limpo com Marca d'água elegante */
         .stApp {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.94)), 
+            background-image: linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)), 
             url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png");
             background-size: 300px;
             background-position: center 10%;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            background-color: #f7f9fc; /* Fundo levemente cinza claro estilo Apple/Google */
         }
 
-        /* 2. Menu Lateral Azul Marinho com Letras Brancas */
+        /* Títulos principais em Azul CEVA */
+        h1, h2, h3 {
+            color: #001439 !important;
+            font-weight: 700 !important;
+            letter-spacing: -0.5px;
+        }
+
+        /* 3. Menu Lateral Azul Marinho e Letras Brancas */
         [data-testid="stSidebar"] {
             background-color: #001439 !important;
+            border-right: 1px solid rgba(0,0,0,0.1);
         }
         [data-testid="stSidebar"] * {
             color: #ffffff !important;
         }
 
-        /* Garantir que textos nas áreas de input/upload não fiquem invisíveis (override das regras gerais acima) */
+        /* Forçando campos de input a ficarem legíveis e modernos (Padrão Microsoft Fluent) */
+        [data-testid="stSidebar"] div[data-baseweb="input"] > div {
+            background-color: #ffffff !important;
+            border-radius: 6px !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+        }
         [data-testid="stSidebar"] input {
-            color: #000000 !important;
-            -webkit-text-fill-color: #000000 !important;
+            color: #001439 !important;
+            -webkit-text-fill-color: #001439 !important;
+            font-weight: 600 !important;
+        }
+        [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] {
+            background-color: #ffffff !important;
+            border-radius: 8px !important;
+            border: 2px dashed rgba(255,255,255,0.4) !important;
         }
         [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] * {
-            color: #000000 !important;
+            color: #001439 !important;
         }
         [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] button * {
-             color: #000000 !important;
+             color: #001439 !important;
         }
 
-        /* Estilização do botão de exportação principal (Vermelho CEVA) */
+        /* 4. Cartões de Métricas (Padrão Google Material Design) */
+        [data-testid="metric-container"] {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out;
+        }
+        [data-testid="metric-container"]:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+        [data-testid="metric-container"] label {
+            color: #555555 !important;
+            font-weight: 600 !important;
+            font-size: 0.95rem !important;
+        }
+        [data-testid="metric-container"] div[data-testid="stMetricValue"] {
+            color: #001439 !important;
+            font-weight: 800 !important;
+        }
+
+        /* 5. Botão Primário (Padrão Amazon CTA) */
         div.stButton > button {
             background-color: #e3000f !important;
             color: white !important;
             border-radius: 8px !important;
             border: none !important;
-            font-weight: bold !important;
+            font-weight: 700 !important;
+            padding: 0.5rem 1rem !important;
+            box-shadow: 0 4px 6px rgba(227, 0, 15, 0.2);
+            transition: all 0.2s;
         }
         div.stButton > button:hover {
             background-color: #b3000b !important;
-            color: white !important;
+            box-shadow: 0 6px 10px rgba(227, 0, 15, 0.3);
+            transform: translateY(-1px);
         }
         
-        /* Ocultar o menu padrão do Streamlit para um visual mais limpo */
+        /* Limpeza do visual do Streamlit */
         #MainMenu {visibility: hidden;}
         header {visibility: hidden;}
     </style>
@@ -65,11 +112,11 @@ st.markdown("""
 
 # 1. SIDEBAR / MENU LATERAL
 st.sidebar.markdown("""
-    <div style='display: flex; align-items: center; justify-content: center; margin-top: -10px;'>
-        <span style='font-size: 2.2em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
-        <span style='color: #e3000f; font-size: 2.0em;'>▲</span>
+    <div style='display: flex; align-items: center; justify-content: center; margin-top: -20px;'>
+        <span style='font-size: 2.5em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1.5px;'>ceva</span>
+        <span style='color: #e3000f; font-size: 2.2em;'>▲</span>
     </div>
-    <div style='text-align: center; color: white; letter-spacing: 4px; font-size: 0.70em; margin-top: -10px; margin-bottom: 25px;'>
+    <div style='text-align: center; color: rgba(255,255,255,0.7); letter-spacing: 5px; font-size: 0.65em; margin-top: -10px; margin-bottom: 30px; font-weight: 600;'>
         LOGISTICS
     </div>
 """, unsafe_allow_html=True)
@@ -100,14 +147,14 @@ st.sidebar.subheader("📂 Upload dos Arquivos")
 file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["xlsx"])
 file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 
-# TÍTULO DA PÁGINA PRINCIPAL
+# TÍTULO DA PÁGINA PRINCIPAL (Visual Clean Moderno)
 st.markdown("""
-    <div style="background-color: transparent; padding: 20px; display: flex; align-items: center; margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.1);">
+    <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 30px; margin-top: -20px;">
         <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-            <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
-            <span style="color: #e3000f; font-size: 2.0em;">▲</span>
+            <span style="font-size: 2.4em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
+            <span style="color: #e3000f; font-size: 2.1em;">▲</span>
         </div>
-        <h1 style="color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px;">Sistema de Planejamento de Inventário Cíclico</h1>
+        <h1 style="color: #001439 !important; margin: 0; font-size: 2.2em; padding-top: 5px; border-left: 2px solid rgba(0,20,57,0.2); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
     </div>
 """, unsafe_allow_html=True)
 
@@ -177,7 +224,7 @@ else:
         tab1, tab2 = st.tabs(["📋 Planejamento Diário (Lote)", "📊 Dashboard Gerencial"])
 
         with tab1:
-            st.subheader("🎯 Seleção Automática de Lote para Contagem")
+            st.markdown("<br>", unsafe_allow_html=True)
             
             mask_a = (df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'A')
             if filtro_curva_a != "Todas":
@@ -223,6 +270,8 @@ else:
             col_m1.metric("SKUs Selecionados", len(lote_sugerido))
             col_m2.metric("Total de Locações do Lote", total_locacoes_lote)
             col_m3.metric("Meta de Locações", f"{min_loc} - {max_loc}")
+            
+            st.markdown("<br>", unsafe_allow_html=True)
 
             if min_loc <= total_locacoes_lote <= max_loc:
                 st.success("✅ O lote selecionado está DENTRO da média de locações planejada!")
@@ -231,7 +280,7 @@ else:
             else:
                 st.error("🚨 Atenção: O total de locações EXCEDE a capacidade estipulada.")
 
-            st.markdown("### Tabela do Lote Planejado")
+            st.markdown("<br>", unsafe_allow_html=True)
             df_display = lote_sugerido[['SKU', 'Curva ABC', 'TOTAL POSIÇÕES', '1ª contagem', '2ª contagem', '3ª contagem', 'LN', 'PC', 'PK', 'PP', 'PR', 'PD']].reset_index(drop=True)
             st.dataframe(df_display, use_container_width=True)
 
@@ -248,7 +297,7 @@ else:
             )
 
         with tab2:
-            st.subheader("📊 Panorama do Inventário Cíclico")
+            st.markdown("<br>", unsafe_allow_html=True)
             
             col_g1, col_g2 = st.columns(2)
 
@@ -289,7 +338,7 @@ else:
                     st.info("Nenhum item disponível para exibir no gráfico de pizza.")
 
             st.markdown("---")
-            st.markdown("### 🔍 Detalhamento dos Itens Bloqueados (Com Divergência)")
+            st.markdown("### 🔍 Detalhamento dos Itens Bloqueados")
             df_bloq = df_plan[df_plan['STATUS_GERAL'] == "Bloqueado (Divergência de Posição)"][['SKU', 'Curva ABC', 'EXPECTED', 'ACTUAL']].reset_index(drop=True)
             df_bloq.columns = ['SKU', 'Curva', 'Esperado (Planilha)', 'Encontrado no SAP']
             st.dataframe(df_bloq, use_container_width=True)
