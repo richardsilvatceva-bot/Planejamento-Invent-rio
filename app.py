@@ -13,7 +13,7 @@ st.markdown("""
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
         }
 
-        /* 2. Fundo Dinâmico de Grid (Padrão de Dashboard de Logística) - Zero bloqueio de rede */
+        /* 2. Fundo Dinâmico de Grid (Padrão de Dashboard de Logística) */
         .stApp {
             background-color: #f4f6f9 !important;
             background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px) !important;
@@ -23,6 +23,12 @@ st.markdown("""
         /* Remove a faixa branca central padrão do Streamlit */
         .block-container, [data-testid="stAppViewBlockContainer"] {
             background-color: transparent !important;
+        }
+
+        /* CORREÇÃO DO TOPO BRANCO: Deixa o cabeçalho (onde fica a setinha) transparente */
+        header, [data-testid="stHeader"] {
+            background-color: transparent !important;
+            background: transparent !important;
         }
 
         /* Títulos principais da TELA CENTRAL em Azul CEVA */
