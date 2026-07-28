@@ -25,7 +25,7 @@ st.markdown("""
             background-color: transparent !important;
         }
 
-        /* CORREÇÃO DO TOPO BRANCO: Deixa o cabeçalho (onde fica a setinha) transparente */
+        /* CORREÇÃO DO TOPO BRANCO: Deixa o cabeçalho transparente */
         header, [data-testid="stHeader"] {
             background-color: transparent !important;
             background: transparent !important;
@@ -147,7 +147,7 @@ st.markdown("""
             animation: drive 22s linear infinite;
             display: flex;
             align-items: flex-end;
-            gap: 120px; /* Dá o espaçamento perfeito entre os veículos */
+            gap: 120px;
             width: max-content;
         }
 
@@ -201,14 +201,10 @@ file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 st.markdown("""
     <div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
         <div class="transport-animation">
-            
-            <!-- Avião (Com margem para parecer que está voando) -->
             <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 12px;">
                 <path d="M10,20 L45,20 C50,20 55,18 55,15 C55,12 50,15 45,15 L20,15 L10,5 L5,5 L12,15 L5,15 L2,10 L0,10 L2,20 Z" fill="#001439"/>
                 <path d="M25,17 L15,28 L22,28 L32,17 Z" fill="#e3000f"/>
             </svg>
-            
-            <!-- Trem -->
             <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
                 <rect x="5" y="5" width="20" height="22" rx="2" fill="#001439"/>
                 <rect x="12" y="10" width="8" height="6" fill="#f4f6f9"/>
@@ -220,8 +216,6 @@ st.markdown("""
                 <circle cx="45" cy="26" r="3" fill="#001439"/>
                 <polygon points="50,20 50,27 57,27" fill="#001439"/>
             </svg>
-
-            <!-- Caminhão -->
             <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="8" width="38" height="18" rx="2" fill="#e3000f"/>
                 <path d="M 42 15 L 48 15 L 53 20 L 53 26 L 42 26 Z" fill="#001439"/>
@@ -231,8 +225,6 @@ st.markdown("""
                 <circle cx="32" cy="26" r="3" fill="#001439"/>
                 <circle cx="48" cy="26" r="3" fill="#e3000f"/>
             </svg>
-
-            <!-- Empilhadeira (Original) -->
             <svg width="50" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
                 <rect x="5" y="10" width="15" height="15" rx="2" fill="#e3000f"/>
                 <rect x="8" y="2" width="10" height="10" rx="1" fill="none" stroke="#001439" stroke-width="2.5"/>
@@ -243,7 +235,6 @@ st.markdown("""
                 <circle cx="9" cy="26" r="3" fill="#001439"/>
                 <circle cx="18" cy="26" r="3" fill="#001439"/>
             </svg>
-            
         </div>
     </div>
     
