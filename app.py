@@ -67,7 +67,7 @@ st.markdown("""
         /* 4. CAIXA DE UPLOAD (Arraste e Solte no Menu Lateral) */
         [data-testid="stFileUploadDropzone"] {
             background-color: #ffffff !important;
-            border: 2px dashed #e3000f !important; /* Borda tracejada Vermelha */
+            border: 2px dashed #e3000f !important;
             border-radius: 8px !important;
         }
         /* Textos de Upload em Vermelho */
@@ -133,17 +133,23 @@ st.markdown("""
             transform: translateY(-1px);
         }
         
-        /* Limpeza do visual do Streamlit, MAS MANTENDO A SETA! */
+        /* Limpeza do visual do Streamlit, MAS MANTENDO A SETA */
         #MainMenu {visibility: hidden;}
         .stDeployButton {display: none;}
-        /* REMOVIDO o "header {visibility: hidden;}" para que a seta de fechar/abrir volte a aparecer! */
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL COM A LOGO (Corrigida para aparecer em todas as redes)
+# 1. SIDEBAR / MENU LATERAL COM ÍCONE DE ESTOQUE DESENHADO EM CÓDIGO (À prova de bloqueio)
 st.sidebar.markdown("""
-    <div style="background-color: white; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/512px-CEVA_Logistics_Logo.svg.png" style="max-width: 100%; height: auto;">
+    <div style="background-color: white; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 24 24" fill="none" stroke="#001439" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            <path d="M16.5 14.5 12 17l-4.5-2.5" stroke="#e3000f" stroke-width="2"></path>
+            <path d="M16.5 9.5 12 12 7.5 9.5" stroke="#e3000f" stroke-width="2"></path>
+        </svg>
+        <span style="color: #e3000f; font-weight: 800; font-size: 0.95em; letter-spacing: 0.5px;">GESTÃO DE ESTOQUE</span>
     </div>
 """, unsafe_allow_html=True)
 st.sidebar.markdown("---")
