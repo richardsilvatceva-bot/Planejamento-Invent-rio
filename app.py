@@ -133,17 +133,17 @@ st.markdown("""
             transform: translateY(-1px);
         }
         
-        /* Limpeza do visual do Streamlit */
+        /* Limpeza do visual do Streamlit, MAS MANTENDO A SETA! */
         #MainMenu {visibility: hidden;}
-        header {visibility: hidden;}
+        .stDeployButton {display: none;}
+        /* REMOVIDO o "header {visibility: hidden;}" para que a seta de fechar/abrir volte a aparecer! */
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL COM A LOGO DA WIKIPEDIA
-# A logo está dentro de um fundo branco com bordas arredondadas para não sumir no fundo azul escuro
+# 1. SIDEBAR / MENU LATERAL COM A LOGO (Corrigida para aparecer em todas as redes)
 st.sidebar.markdown("""
-    <div style="background-color: white; padding: 12px; border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; margin-top: -15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png" style="width: 85%;">
+    <div style="background-color: white; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/512px-CEVA_Logistics_Logo.svg.png" style="max-width: 100%; height: auto;">
     </div>
 """, unsafe_allow_html=True)
 st.sidebar.markdown("---")
