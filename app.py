@@ -6,10 +6,10 @@ import random
 # Ícone da aba do navegador
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
 
-# --- INJEÇÃO DE CSS PREMIUM (INSPIRADO EM APPLE/GOOGLE/MICROSOFT) ---
+# --- INJEÇÃO DE CSS PREMIUM ---
 st.markdown("""
     <style>
-        /* 1. Tipografia Global Limpa (Padrão Apple / Microsoft) */
+        /* 1. Tipografia Global Limpa */
         html, body, [class*="css"]  {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
         }
@@ -25,46 +25,57 @@ st.markdown("""
             background-color: #f7f9fc;
         }
 
-        /* Títulos principais em Azul CEVA */
-        h1, h2, h3 {
+        /* Títulos principais da TELA CENTRAL em Azul CEVA */
+        .main h1, .main h2, .main h3, .main p, .main span {
             color: #001439 !important;
+        }
+        .main h1, .main h2, .main h3 {
             font-weight: 700 !important;
             letter-spacing: -0.5px;
         }
 
-        /* 3. Menu Lateral Azul Marinho e Letras Brancas */
+        /* 3. Menu Lateral Azul Marinho com LETRAS VERMELHAS FORTE */
         [data-testid="stSidebar"] {
             background-color: #001439 !important;
             border-right: 1px solid rgba(0,0,0,0.1);
         }
-        [data-testid="stSidebar"] * {
-            color: #ffffff !important;
+        
+        /* Força todos os textos da barra lateral para VERMELHO */
+        [data-testid="stSidebar"] p, 
+        [data-testid="stSidebar"] label, 
+        [data-testid="stSidebar"] span, 
+        [data-testid="stSidebar"] h1, 
+        [data-testid="stSidebar"] h2, 
+        [data-testid="stSidebar"] h3,
+        [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
+            color: #e3000f !important; 
         }
 
-        /* Campos numéricos de input */
+        /* Campos numéricos de input - Fundo branco para leitura */
         [data-testid="stSidebar"] div[data-baseweb="input"] > div {
             background-color: #ffffff !important;
             border-radius: 6px !important;
-            border: 1px solid rgba(255,255,255,0.2) !important;
+            border: 1px solid rgba(227, 0, 15, 0.3) !important;
         }
+        /* Texto que o usuário digita fica em azul escuro para ler melhor no fundo branco */
         [data-testid="stSidebar"] input {
             color: #001439 !important;
             -webkit-text-fill-color: #001439 !important;
             font-weight: 600 !important;
         }
 
-        /* 4. CORREÇÃO DA CAIXA DE UPLOAD (Arraste e Solte Visível) */
+        /* 4. CAIXA DE UPLOAD (Arraste e Solte no Menu Lateral) */
         [data-testid="stFileUploadDropzone"] {
             background-color: #ffffff !important;
-            border: 2px dashed #001439 !important; /* Borda tracejada azul */
+            border: 2px dashed #e3000f !important; /* Borda tracejada Vermelha */
             border-radius: 8px !important;
         }
-        /* Força os textos "Drag and drop file here" para Azul */
+        /* Textos de Upload em Vermelho */
         [data-testid="stFileUploadDropzone"] div, 
         [data-testid="stFileUploadDropzone"] span, 
         [data-testid="stFileUploadDropzone"] small,
         [data-testid="stFileUploadDropzone"] p {
-            color: #001439 !important;
+            color: #e3000f !important;
         }
         /* Botão interno de procurar arquivo no Vermelho CEVA */
         [data-testid="stFileUploadDropzone"] button {
@@ -76,13 +87,13 @@ st.markdown("""
         [data-testid="stFileUploadDropzone"] button * {
             color: #ffffff !important;
         }
-        /* Ícone de nuvem de upload em azul */
+        /* Ícone de nuvem de upload em vermelho */
         [data-testid="stFileUploadDropzone"] svg {
-            fill: #001439 !important;
-            stroke: #001439 !important;
+            fill: #e3000f !important;
+            stroke: #e3000f !important;
         }
 
-        /* 5. Cartões de Métricas (Padrão Google Material Design) */
+        /* 5. Cartões de Métricas (Tela Principal) */
         [data-testid="metric-container"] {
             background-color: #ffffff;
             border-radius: 12px;
@@ -105,7 +116,7 @@ st.markdown("""
             font-weight: 800 !important;
         }
 
-        /* 6. Botão Primário Exportar (Padrão Amazon CTA) */
+        /* 6. Botão Primário Exportar */
         div.stButton > button {
             background-color: #e3000f !important;
             color: white !important;
@@ -128,14 +139,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL 
+# 1. SIDEBAR / MENU LATERAL COM A LOGO DA WIKIPEDIA
+# A logo está dentro de um fundo branco com bordas arredondadas para não sumir no fundo azul escuro
 st.sidebar.markdown("""
-    <div style='display: flex; align-items: center; justify-content: center; margin-top: -20px;'>
-        <span style='font-size: 1.8em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
-        <span style='color: #e3000f; font-size: 1.5em;'>▲</span>
-    </div>
-    <div style='text-align: center; color: rgba(255,255,255,0.7); letter-spacing: 4px; font-size: 0.55em; margin-top: -8px; margin-bottom: 30px; font-weight: 600;'>
-        LOGISTICS
+    <div style="background-color: white; padding: 12px; border-radius: 8px; display: flex; justify-content: center; align-items: center; margin-bottom: 25px; margin-top: -15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CEVA_Logistics_Logo.svg/800px-CEVA_Logistics_Logo.svg.png" style="width: 85%;">
     </div>
 """, unsafe_allow_html=True)
 st.sidebar.markdown("---")
