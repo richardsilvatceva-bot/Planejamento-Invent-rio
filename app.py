@@ -41,7 +41,7 @@ st.markdown("""
             color: #ffffff !important;
         }
 
-        /* Forçando campos de input a ficarem legíveis e modernos (Padrão Microsoft Fluent) */
+        /* Campos numéricos de input */
         [data-testid="stSidebar"] div[data-baseweb="input"] > div {
             background-color: #ffffff !important;
             border-radius: 6px !important;
@@ -52,19 +52,37 @@ st.markdown("""
             -webkit-text-fill-color: #001439 !important;
             font-weight: 600 !important;
         }
-        [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] {
+
+        /* 4. CORREÇÃO DA CAIXA DE UPLOAD (Arraste e Solte Visível) */
+        [data-testid="stFileUploadDropzone"] {
             background-color: #ffffff !important;
+            border: 2px dashed #001439 !important; /* Borda tracejada azul */
             border-radius: 8px !important;
-            border: 2px dashed rgba(255,255,255,0.4) !important;
         }
-        [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] * {
+        /* Força os textos "Drag and drop file here" para Azul */
+        [data-testid="stFileUploadDropzone"] div, 
+        [data-testid="stFileUploadDropzone"] span, 
+        [data-testid="stFileUploadDropzone"] small,
+        [data-testid="stFileUploadDropzone"] p {
             color: #001439 !important;
         }
-        [data-testid="stSidebar"] [data-testid="stFileUploadDropzone"] button * {
-             color: #001439 !important;
+        /* Botão interno de procurar arquivo no Vermelho CEVA */
+        [data-testid="stFileUploadDropzone"] button {
+            background-color: #e3000f !important;
+            color: #ffffff !important;
+            border: none !important;
+            font-weight: bold !important;
+        }
+        [data-testid="stFileUploadDropzone"] button * {
+            color: #ffffff !important;
+        }
+        /* Ícone de nuvem de upload em azul */
+        [data-testid="stFileUploadDropzone"] svg {
+            fill: #001439 !important;
+            stroke: #001439 !important;
         }
 
-        /* 4. Cartões de Métricas (Padrão Google Material Design) */
+        /* 5. Cartões de Métricas (Padrão Google Material Design) */
         [data-testid="metric-container"] {
             background-color: #ffffff;
             border-radius: 12px;
@@ -87,7 +105,7 @@ st.markdown("""
             font-weight: 800 !important;
         }
 
-        /* 5. Botão Primário (Padrão Amazon CTA) */
+        /* 6. Botão Primário Exportar (Padrão Amazon CTA) */
         div.stButton > button {
             background-color: #e3000f !important;
             color: white !important;
@@ -110,7 +128,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL (Tamanho ajustado e reduzido)
+# 1. SIDEBAR / MENU LATERAL 
 st.sidebar.markdown("""
     <div style='display: flex; align-items: center; justify-content: center; margin-top: -20px;'>
         <span style='font-size: 1.8em; font-weight: 900; color: white; margin-right: 5px; letter-spacing: -1px;'>ceva</span>
@@ -147,7 +165,7 @@ st.sidebar.subheader("📂 Upload dos Arquivos")
 file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["xlsx"])
 file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 
-# TÍTULO DA PÁGINA PRINCIPAL (Visual Clean Moderno)
+# TÍTULO DA PÁGINA PRINCIPAL
 st.markdown("""
     <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 30px; margin-top: -20px;">
         <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
