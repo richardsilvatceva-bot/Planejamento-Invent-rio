@@ -138,14 +138,17 @@ st.markdown("""
             transform: translateY(-1px);
         }
         
-        /* 7. ANIMAÇÃO DA EMPILHADEIRA */
+        /* 7. ANIMAÇÃO DA CADEIA MULTIMODAL (COMBOIO LOGÍSTICO) */
         @keyframes drive {
-            0% { transform: translateX(-50px); }
+            0% { transform: translateX(-100%); }
             100% { transform: translateX(100vw); }
         }
-        .forklift-animation {
-            animation: drive 15s linear infinite;
-            display: inline-block;
+        .transport-animation {
+            animation: drive 22s linear infinite;
+            display: flex;
+            align-items: flex-end;
+            gap: 120px; /* Dá o espaçamento perfeito entre os veículos */
+            width: max-content;
         }
 
         /* Limpeza do visual do Streamlit */
@@ -154,7 +157,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL COM ÍCONE DE ESTOQUE (Sem fundo branco agora)
+# 1. SIDEBAR / MENU LATERAL COM ÍCONE DE ESTOQUE
 st.sidebar.markdown("""
     <div style="background-color: transparent; border: 1.5px solid rgba(227, 0, 15, 0.3); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; display: flex; flex-direction: column; align-items: center;">
         <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
@@ -194,26 +197,53 @@ st.sidebar.subheader("📂 Upload dos Arquivos")
 file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["xlsx"])
 file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
 
-# TÍTULO DA PÁGINA PRINCIPAL COM A EMPILHADEIRA ANIMADA EM CIMA
+# TÍTULO DA PÁGINA PRINCIPAL COM O COMBOIO ANIMADO
 st.markdown("""
-    <div style="width: 100%; overflow: hidden; height: 35px; margin-top: -30px; margin-bottom: 5px;">
-        <div class="forklift-animation">
+    <div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
+        <div class="transport-animation">
+            
+            <!-- Avião (Com margem para parecer que está voando) -->
+            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 12px;">
+                <path d="M10,20 L45,20 C50,20 55,18 55,15 C55,12 50,15 45,15 L20,15 L10,5 L5,5 L12,15 L5,15 L2,10 L0,10 L2,20 Z" fill="#001439"/>
+                <path d="M25,17 L15,28 L22,28 L32,17 Z" fill="#e3000f"/>
+            </svg>
+            
+            <!-- Trem -->
+            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="5" width="20" height="22" rx="2" fill="#001439"/>
+                <rect x="12" y="10" width="8" height="6" fill="#f4f6f9"/>
+                <rect x="25" y="12" width="25" height="15" rx="2" fill="#e3000f"/>
+                <rect x="38" y="4" width="6" height="8" fill="#001439"/>
+                <circle cx="12" cy="26" r="4" fill="#e3000f"/>
+                <circle cx="22" cy="26" r="4" fill="#e3000f"/>
+                <circle cx="35" cy="26" r="3" fill="#001439"/>
+                <circle cx="45" cy="26" r="3" fill="#001439"/>
+                <polygon points="50,20 50,27 57,27" fill="#001439"/>
+            </svg>
+
+            <!-- Caminhão -->
+            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="8" width="38" height="18" rx="2" fill="#e3000f"/>
+                <path d="M 42 15 L 48 15 L 53 20 L 53 26 L 42 26 Z" fill="#001439"/>
+                <rect x="42" y="10" width="8" height="16" fill="#001439"/>
+                <circle cx="10" cy="26" r="3" fill="#001439"/>
+                <circle cx="20" cy="26" r="3" fill="#001439"/>
+                <circle cx="32" cy="26" r="3" fill="#001439"/>
+                <circle cx="48" cy="26" r="3" fill="#e3000f"/>
+            </svg>
+
+            <!-- Empilhadeira (Original) -->
             <svg width="50" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
-                <!-- Corpo da empilhadeira vermelho -->
                 <rect x="5" y="10" width="15" height="15" rx="2" fill="#e3000f"/>
-                <!-- Cabine azul escura -->
                 <rect x="8" y="2" width="10" height="10" rx="1" fill="none" stroke="#001439" stroke-width="2.5"/>
-                <!-- Garfos e torre azuis escuros -->
                 <path d="M 20 25 L 32 25 L 32 15 L 32 8" fill="none" stroke="#001439" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 <line x1="20" y1="10" x2="20" y2="25" stroke="#001439" stroke-width="2.5"/>
-                <!-- Caixa de papelão -->
                 <rect x="23" y="15" width="8" height="9" fill="#d2a679" stroke="#8b5a2b" stroke-width="1"/>
-                <!-- Detalhe da caixa -->
                 <line x1="23" y1="19" x2="31" y2="19" stroke="#8b5a2b" stroke-width="1" stroke-dasharray="2,1"/>
-                <!-- Rodas traseira e dianteira azuis escuros -->
                 <circle cx="9" cy="26" r="3" fill="#001439"/>
                 <circle cx="18" cy="26" r="3" fill="#001439"/>
             </svg>
+            
         </div>
     </div>
     
