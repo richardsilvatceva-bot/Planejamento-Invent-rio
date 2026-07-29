@@ -5,7 +5,7 @@ import plotly.express as px
 # Ícone da aba do navegador
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
 
-# --- INJEÇÃO DE CSS PREMIUM ---
+# --- INJEÇÃO DE CSS PREMIUM (BLINDADO CONTRA MODO ESCURO) ---
 st.markdown("""
     <style>
         /* Tipografia Global Limpa */
@@ -30,20 +30,13 @@ st.markdown("""
             background: transparent !important;
         }
 
-        /* Títulos e Textos Principais */
-        .main h1, .main h2, .main h3, .main p, .main span {
-            color: #001439 !important;
-        }
-        .main h1, .main h2, .main h3 {
-            font-weight: 700 !important;
-            letter-spacing: -0.5px;
-        }
-
         /* Menu Lateral */
         [data-testid="stSidebar"] {
             background-color: #001439 !important;
             border-right: 1px solid rgba(0,0,0,0.1);
         }
+        
+        /* Força textos e ícones da barra lateral para VERMELHO */
         [data-testid="stSidebar"] p, 
         [data-testid="stSidebar"] label, 
         [data-testid="stSidebar"] span, 
@@ -54,16 +47,25 @@ st.markdown("""
             color: #e3000f !important; 
         }
 
-        /* Inputs do Menu Lateral */
+        /* Inputs do Menu Lateral (Caixas Brancas) */
         [data-testid="stSidebar"] div[data-baseweb="input"] > div {
             background-color: #ffffff !important;
             border-radius: 6px !important;
             border: 1px solid rgba(227, 0, 15, 0.3) !important;
         }
+        
+        /* TEXTOS DIGITADOS PELO USUÁRIO (ex: 10, 5, 2) AGORA SÃO VERMELHOS E EM NEGRITO */
         [data-testid="stSidebar"] input {
-            color: #001439 !important;
-            -webkit-text-fill-color: #001439 !important;
-            font-weight: 600 !important;
+            color: #e3000f !important;
+            -webkit-text-fill-color: #e3000f !important;
+            font-weight: 800 !important;
+            font-size: 1.1em !important;
+        }
+        
+        /* Botões de + e - nos inputs também vermelhos */
+        [data-testid="stSidebar"] div[data-baseweb="input"] svg {
+            color: #e3000f !important;
+            fill: #e3000f !important;
         }
 
         /* Upload no Menu Lateral */
@@ -235,27 +237,48 @@ st.markdown("""
             <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
             <span style="color: #e3000f; font-size: 1.9em;">▲</span>
         </div>
-        <h1 style="color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px; border-left: 2px solid rgba(0,20,57,0.2); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
+        <h1 style="color: #001439 !important; -webkit-text-fill-color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px; border-left: 2px solid rgba(0,20,57,0.2); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
     </div>
 """, unsafe_allow_html=True)
 
 
-# --- TELA DE BOAS-VINDAS EM TEXTO NATIVO STREAMLIT ---
+# --- TELA DE BOAS-VINDAS BLINDADA COM HTML E CORES FIXAS ---
 if file_plan is None or file_sap is None:
-    st.markdown("### Bem-vindo ao Workspace de Inventário")
-    st.markdown("Para iniciar a análise automatizada e gerar os lotes, siga os passos abaixo:")
-    st.markdown("---")
+    st.markdown("""
+        <div style="text-align: center; margin-top: 20px;">
+            <h2 style="color: #001439 !important; font-size: 2.2em; font-weight: 800; -webkit-text-fill-color: #001439 !important;">Bem-vindo ao Workspace de Inventário</h2>
+            <p style="color: #001439 !important; font-size: 1.1em; margin-bottom: 40px; font-weight: 500; -webkit-text-fill-color: #001439 !important;">Para iniciar a análise automatizada e gerar os lotes, siga os passos abaixo:</p>
+        </div>
+    """, unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.info("📄 **Passo 1**\n\nArraste a **Planilha de Planejamento** para a primeira área no menu lateral esquerdo.")
+        st.markdown("""
+            <div style="background: white; border: 2px dashed #001439; padding: 25px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">📄</div>
+                <h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 1</h3>
+                <p style="color: #001439 !important; font-weight: 500; -webkit-text-fill-color: #001439 !important;">Arraste a <b>Planilha de Planejamento</b> para a primeira área no menu lateral esquerdo.</p>
+            </div>
+        """, unsafe_allow_html=True)
         
     with col2:
-        st.info("📊 **Passo 2**\n\nArraste o **Relatório SAP** exportado para a segunda área no menu lateral esquerdo.")
+        st.markdown("""
+            <div style="background: white; border: 2px dashed #001439; padding: 25px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">📊</div>
+                <h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 2</h3>
+                <p style="color: #001439 !important; font-weight: 500; -webkit-text-fill-color: #001439 !important;">Arraste o <b>Relatório SAP</b> exportado para a segunda área no menu lateral esquerdo.</p>
+            </div>
+        """, unsafe_allow_html=True)
         
     with col3:
-        st.info("⚙️ **Passo 3**\n\nAjuste as **Capacidades e Metas** abaixo e deixe o sistema calcular o lote ideal.")
+        st.markdown("""
+            <div style="background: white; border: 2px dashed #001439; padding: 25px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">⚙️</div>
+                <h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 3</h3>
+                <p style="color: #001439 !important; font-weight: 500; -webkit-text-fill-color: #001439 !important;">Ajuste as <b>Capacidades e Metas</b> abaixo e deixe o sistema calcular o lote ideal.</p>
+            </div>
+        """, unsafe_allow_html=True)
 
 else:
     # --- LÓGICA PRINCIPAL DO SISTEMA ---
