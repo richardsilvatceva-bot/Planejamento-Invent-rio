@@ -253,85 +253,85 @@ file_plan = st.sidebar.file_uploader("1. Planilha de Planejamento", type=["xlsx"
 file_sap = st.sidebar.file_uploader("2. Relatório SAP", type=["xlsx"])
 
 
-# --- CABEÇALHO PRINCIPAL (COM ANIMAÇÃO MULTIMODAL RESPONSIVA AO TEMA) ---
+# --- CABEÇALHO PRINCIPAL ---
 st.markdown("""
-    <div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
-        <div class="transport-animation">
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 12px;">
-                <path d="M10,20 L45,20 C50,20 55,18 55,15 C55,12 50,15 45,15 L20,15 L10,5 L5,5 L12,15 L5,15 L2,10 L0,10 L2,20 Z" fill="var(--vehicle-color)"/>
-                <path d="M25,17 L15,28 L22,28 L32,17 Z" fill="#e3000f"/>
-            </svg>
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="5" width="20" height="22" rx="2" fill="var(--vehicle-color)"/>
-                <rect x="12" y="10" width="8" height="6" fill="var(--bg-color)"/>
-                <rect x="25" y="12" width="25" height="15" rx="2" fill="#e3000f"/>
-                <rect x="38" y="4" width="6" height="8" fill="var(--vehicle-color)"/>
-                <circle cx="12" cy="26" r="4" fill="#e3000f"/>
-                <circle cx="22" cy="26" r="4" fill="#e3000f"/>
-                <circle cx="35" cy="26" r="3" fill="var(--vehicle-color)"/>
-                <circle cx="45" cy="26" r="3" fill="var(--vehicle-color)"/>
-                <polygon points="50,20 50,27 57,27" fill="var(--vehicle-color)"/>
-            </svg>
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="8" width="38" height="18" rx="2" fill="#e3000f"/>
-                <path d="M 42 15 L 48 15 L 53 20 L 53 26 L 42 26 Z" fill="var(--vehicle-color)"/>
-                <rect x="42" y="10" width="8" height="16" fill="var(--vehicle-color)"/>
-                <circle cx="10" cy="26" r="3" fill="var(--vehicle-color)"/>
-                <circle cx="20" cy="26" r="3" fill="var(--vehicle-color)"/>
-                <circle cx="32" cy="26" r="3" fill="var(--vehicle-color)"/>
-                <circle cx="48" cy="26" r="3" fill="#e3000f"/>
-            </svg>
-            <svg width="50" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="10" width="15" height="15" rx="2" fill="#e3000f"/>
-                <rect x="8" y="2" width="10" height="10" rx="1" fill="none" stroke="var(--vehicle-color)" stroke-width="2.5"/>
-                <path d="M 20 25 L 32 25 L 32 15 L 32 8" fill="none" stroke="var(--vehicle-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="20" y1="10" x2="20" y2="25" stroke="var(--vehicle-color)" stroke-width="2.5"/>
-                <rect x="23" y="15" width="8" height="9" fill="#d2a679" stroke="#8b5a2b" stroke-width="1"/>
-                <line x1="23" y1="19" x2="31" y2="19" stroke="#8b5a2b" stroke-width="1" stroke-dasharray="2,1"/>
-                <circle cx="9" cy="26" r="3" fill="var(--vehicle-color)"/>
-                <circle cx="18" cy="26" r="3" fill="var(--vehicle-color)"/>
-            </svg>
-        </div>
+<div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
+    <div class="transport-animation">
+        <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 12px;">
+            <path d="M10,20 L45,20 C50,20 55,18 55,15 C55,12 50,15 45,15 L20,15 L10,5 L5,5 L12,15 L5,15 L2,10 L0,10 L2,20 Z" fill="var(--vehicle-color)"/>
+            <path d="M25,17 L15,28 L22,28 L32,17 Z" fill="#e3000f"/>
+        </svg>
+        <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="20" height="22" rx="2" fill="var(--vehicle-color)"/>
+            <rect x="12" y="10" width="8" height="6" fill="var(--bg-color)"/>
+            <rect x="25" y="12" width="25" height="15" rx="2" fill="#e3000f"/>
+            <rect x="38" y="4" width="6" height="8" fill="var(--vehicle-color)"/>
+            <circle cx="12" cy="26" r="4" fill="#e3000f"/>
+            <circle cx="22" cy="26" r="4" fill="#e3000f"/>
+            <circle cx="35" cy="26" r="3" fill="var(--vehicle-color)"/>
+            <circle cx="45" cy="26" r="3" fill="var(--vehicle-color)"/>
+            <polygon points="50,20 50,27 57,27" fill="var(--vehicle-color)"/>
+        </svg>
+        <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="8" width="38" height="18" rx="2" fill="#e3000f"/>
+            <path d="M 42 15 L 48 15 L 53 20 L 53 26 L 42 26 Z" fill="var(--vehicle-color)"/>
+            <rect x="42" y="10" width="8" height="16" fill="var(--vehicle-color)"/>
+            <circle cx="10" cy="26" r="3" fill="var(--vehicle-color)"/>
+            <circle cx="20" cy="26" r="3" fill="var(--vehicle-color)"/>
+            <circle cx="32" cy="26" r="3" fill="var(--vehicle-color)"/>
+            <circle cx="48" cy="26" r="3" fill="#e3000f"/>
+        </svg>
+        <svg width="50" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="10" width="15" height="15" rx="2" fill="#e3000f"/>
+            <rect x="8" y="2" width="10" height="10" rx="1" fill="none" stroke="var(--vehicle-color)" stroke-width="2.5"/>
+            <path d="M 20 25 L 32 25 L 32 15 L 32 8" fill="none" stroke="var(--vehicle-color)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="20" y1="10" x2="20" y2="25" stroke="var(--vehicle-color)" stroke-width="2.5"/>
+            <rect x="23" y="15" width="8" height="9" fill="#d2a679" stroke="#8b5a2b" stroke-width="1"/>
+            <line x1="23" y1="19" x2="31" y2="19" stroke="#8b5a2b" stroke-width="1" stroke-dasharray="2,1"/>
+            <circle cx="9" cy="26" r="3" fill="var(--vehicle-color)"/>
+            <circle cx="18" cy="26" r="3" fill="var(--vehicle-color)"/>
+        </svg>
     </div>
-    
-    <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 20px;">
-        <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-            <span style="font-size: 2.2em; font-weight: 900; color: var(--text-color); margin-right: 5px; letter-spacing: -1.5px; -webkit-text-fill-color: var(--text-color);">ceva</span>
-            <span style="color: #e3000f; font-size: 1.9em;">▲</span>
-        </div>
-        <h1 style="color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important; margin: 0; font-size: 2.1em; padding-top: 5px; border-left: 2px solid var(--card-border); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
+</div>
+
+<div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 20px;">
+    <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+        <span style="font-size: 2.2em; font-weight: 900; color: var(--text-color); margin-right: 5px; letter-spacing: -1.5px; -webkit-text-fill-color: var(--text-color);">ceva</span>
+        <span style="color: #e3000f; font-size: 1.9em;">▲</span>
     </div>
+    <h1 style="color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important; margin: 0; font-size: 2.1em; padding-top: 5px; border-left: 2px solid var(--card-border); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
+</div>
 """, unsafe_allow_html=True)
 
 
-# --- TELA DE BOAS-VINDAS BLINDADA (Adaptável Claro/Escuro) ---
+# --- TELA DE BOAS-VINDAS BLINDADA (Totalmente colada à esquerda para evitar bugs de markdown) ---
 if file_plan is None or file_sap is None:
     st.markdown("""
-        <div class="welcome-container">
-            <h2 style="color: var(--text-color) !important; font-size: 2.2em; font-weight: 800; -webkit-text-fill-color: var(--text-color) !important;">Bem-vindo ao Workspace de Inventário</h2>
-            <p style="color: var(--sub-text) !important; font-size: 1.1em; margin-bottom: 40px; font-weight: 500; -webkit-text-fill-color: var(--sub-text) !important;">Para iniciar a análise automatizada e gerar os lotes, siga os passos abaixo:</p>
-            
-            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
-                <div class="welcome-card">
-                    <div style="font-size: 2.5em; margin-bottom: 10px;">📄</div>
-                    <h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 1</h3>
-                    <p style="color: var(--text-color) !important; font-weight: 500; -webkit-text-fill-color: var(--text-color) !important;">Arraste a <b style="color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important;">Planilha de Planejamento</b> para a primeira área no menu lateral esquerdo.</p>
-                </div>
-                
-                <div class="welcome-card">
-                    <div style="font-size: 2.5em; margin-bottom: 10px;">📊</div>
-                    <h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 2</h3>
-                    <p style="color: var(--text-color) !important; font-weight: 500; -webkit-text-fill-color: var(--text-color) !important;">Arraste o <b style="color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important;">Relatório SAP</b> exportado para a segunda área no menu lateral esquerdo.</p>
-                </div>
-                
-                <div class="welcome-card">
-                    <div style="font-size: 2.5em; margin-bottom: 10px;">⚙️</div>
-                    <h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 3</h3>
-                    <p style="color: var(--text-color) !important; font-weight: 500; -webkit-text-fill-color: var(--text-color) !important;">Ajuste as <b style="color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important;">Capacidades e Metas</b> abaixo e deixe o sistema calcular o lote ideal.</p>
-                </div>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+<div class="welcome-container">
+<h2 style="color: var(--text-color) !important; font-size: 2.2em; font-weight: 800; -webkit-text-fill-color: var(--text-color) !important;">Bem-vindo ao Workspace de Inventário</h2>
+<p style="color: var(--sub-text) !important; font-size: 1.1em; margin-bottom: 40px; font-weight: 500; -webkit-text-fill-color: var(--sub-text) !important;">Para iniciar a análise automatizada e gerar os lotes, siga os passos abaixo:</p>
+
+<div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+<div class="welcome-card">
+<div style="font-size: 2.5em; margin-bottom: 10px;">📄</div>
+<h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 1</h3>
+<p style="color: var(--text-color) !important; font-weight: 500; -webkit-text-fill-color: var(--text-color) !important;">Arraste a <b style="color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important;">Planilha de Planejamento</b> para a primeira área no menu lateral esquerdo.</p>
+</div>
+
+<div class="welcome-card">
+<div style="font-size: 2.5em; margin-bottom: 10px;">📊</div>
+<h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 2</h3>
+<p style="color: var(--text-color) !important; font-weight: 500; -webkit-text-fill-color: var(--text-color) !important;">Arraste o <b style="color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important;">Relatório SAP</b> exportado para a segunda área no menu lateral esquerdo.</p>
+</div>
+
+<div class="welcome-card">
+<div style="font-size: 2.5em; margin-bottom: 10px;">⚙️</div>
+<h3 style="color: #e3000f !important; font-size: 1.3em; margin-top: 0; -webkit-text-fill-color: #e3000f !important;">Passo 3</h3>
+<p style="color: var(--text-color) !important; font-weight: 500; -webkit-text-fill-color: var(--text-color) !important;">Ajuste as <b style="color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important;">Capacidades e Metas</b> abaixo e deixe o sistema calcular o lote ideal.</p>
+</div>
+</div>
+</div>
+""", unsafe_allow_html=True)
 
 else:
     # --- LÓGICA PRINCIPAL DO SISTEMA ---
@@ -467,7 +467,7 @@ else:
                 fig_status = px.histogram(
                     df_plan, x="Curva ABC", color="STATUS_GERAL", 
                     title="Status dos SKUs por Curva ABC", barmode="group",
-                    template=grafico_tema, # <--- Gráfico se adapta ao tema!
+                    template=grafico_tema,
                     color_discrete_map={
                         "Já Contado": "#8a8d91", "Disponível para Contar": "#001439" if not modo_escuro else "#1f77b4", "Bloqueado (Divergência de Posição)": "#e3000f"
                     }
@@ -481,7 +481,7 @@ else:
                     fig_loc = px.pie(
                         df_disp_only, names="Curva ABC", values="TOTAL POSIÇÕES", 
                         title="Distribuição de Locações Disponíveis por Curva", color="Curva ABC",
-                        template=grafico_tema, # <--- Gráfico se adapta ao tema!
+                        template=grafico_tema,
                         color_discrete_map={"A": "#001439" if not modo_escuro else "#1f77b4", "B": "#e3000f", "C": "#8a8d91"}
                     )
                     st.plotly_chart(fig_loc, use_container_width=True)
