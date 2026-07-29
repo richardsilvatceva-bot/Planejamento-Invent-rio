@@ -7,166 +7,166 @@ st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", l
 
 # --- INJEÇÃO DE CSS PREMIUM ---
 st.markdown("""
-    <style>
-        /* Tipografia Global Limpa */
-        html, body, [class*="css"]  {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-        }
+<style>
+    /* Tipografia Global Limpa */
+    html, body, [class*="css"]  {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    }
 
-        /* Fundo Dinâmico de Grid */
-        .stApp {
-            background-color: #f4f6f9 !important;
-            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px) !important;
-            background-size: 25px 25px !important;
-        }
-        
-        .block-container, [data-testid="stAppViewBlockContainer"] {
-            background-color: transparent !important;
-            padding-top: 2rem !important; /* Mais espaço no topo */
-        }
+    /* Fundo Dinâmico de Grid */
+    .stApp {
+        background-color: #f4f6f9 !important;
+        background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px) !important;
+        background-size: 25px 25px !important;
+    }
+    
+    .block-container, [data-testid="stAppViewBlockContainer"] {
+        background-color: transparent !important;
+        padding-top: 2rem !important;
+    }
 
-        header, [data-testid="stHeader"] {
-            background-color: transparent !important;
-            background: transparent !important;
-        }
+    header, [data-testid="stHeader"] {
+        background-color: transparent !important;
+        background: transparent !important;
+    }
 
-        /* Títulos e Textos Principais */
-        .main h1, .main h2, .main h3, .main p, .main span {
-            color: #001439 !important;
-        }
-        .main h1, .main h2, .main h3 {
-            font-weight: 700 !important;
-            letter-spacing: -0.5px;
-        }
+    /* Títulos e Textos Principais */
+    .main h1, .main h2, .main h3, .main p, .main span {
+        color: #001439 !important;
+    }
+    .main h1, .main h2, .main h3 {
+        font-weight: 700 !important;
+        letter-spacing: -0.5px;
+    }
 
-        /* Menu Lateral */
-        [data-testid="stSidebar"] {
-            background-color: #001439 !important;
-            border-right: 1px solid rgba(0,0,0,0.1);
-        }
-        [data-testid="stSidebar"] p, 
-        [data-testid="stSidebar"] label, 
-        [data-testid="stSidebar"] span, 
-        [data-testid="stSidebar"] h1, 
-        [data-testid="stSidebar"] h2, 
-        [data-testid="stSidebar"] h3,
-        [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
-            color: #e3000f !important; 
-        }
+    /* Menu Lateral */
+    [data-testid="stSidebar"] {
+        background-color: #001439 !important;
+        border-right: 1px solid rgba(0,0,0,0.1);
+    }
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] label, 
+    [data-testid="stSidebar"] span, 
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
+        color: #e3000f !important; 
+    }
 
-        /* Inputs do Menu Lateral */
-        [data-testid="stSidebar"] div[data-baseweb="input"] > div {
-            background-color: #ffffff !important;
-            border-radius: 6px !important;
-            border: 1px solid rgba(227, 0, 15, 0.3) !important;
-        }
-        [data-testid="stSidebar"] input {
-            color: #001439 !important;
-            -webkit-text-fill-color: #001439 !important;
-            font-weight: 600 !important;
-        }
+    /* Inputs do Menu Lateral */
+    [data-testid="stSidebar"] div[data-baseweb="input"] > div {
+        background-color: #ffffff !important;
+        border-radius: 6px !important;
+        border: 1px solid rgba(227, 0, 15, 0.3) !important;
+    }
+    [data-testid="stSidebar"] input {
+        color: #001439 !important;
+        -webkit-text-fill-color: #001439 !important;
+        font-weight: 600 !important;
+    }
 
-        /* Upload no Menu Lateral */
-        [data-testid="stFileUploadDropzone"] {
-            background-color: #ffffff !important;
-            border: 2px dashed #e3000f !important; 
-            border-radius: 8px !important;
-        }
-        [data-testid="stFileUploadDropzone"] div, 
-        [data-testid="stFileUploadDropzone"] span, 
-        [data-testid="stFileUploadDropzone"] small,
-        [data-testid="stFileUploadDropzone"] p {
-            color: #e3000f !important;
-        }
-        [data-testid="stFileUploadDropzone"] button {
-            background-color: #e3000f !important;
-            color: #ffffff !important;
-            border: none !important;
-            font-weight: bold !important;
-        }
-        [data-testid="stFileUploadDropzone"] button * {
-            color: #ffffff !important;
-        }
-        [data-testid="stFileUploadDropzone"] svg {
-            fill: #e3000f !important;
-            stroke: #e3000f !important;
-        }
+    /* Upload no Menu Lateral */
+    [data-testid="stFileUploadDropzone"] {
+        background-color: #ffffff !important;
+        border: 2px dashed #e3000f !important; 
+        border-radius: 8px !important;
+    }
+    [data-testid="stFileUploadDropzone"] div, 
+    [data-testid="stFileUploadDropzone"] span, 
+    [data-testid="stFileUploadDropzone"] small,
+    [data-testid="stFileUploadDropzone"] p {
+        color: #e3000f !important;
+    }
+    [data-testid="stFileUploadDropzone"] button {
+        background-color: #e3000f !important;
+        color: #ffffff !important;
+        border: none !important;
+        font-weight: bold !important;
+    }
+    [data-testid="stFileUploadDropzone"] button * {
+        color: #ffffff !important;
+    }
+    [data-testid="stFileUploadDropzone"] svg {
+        fill: #e3000f !important;
+        stroke: #e3000f !important;
+    }
 
-        /* Cartões de Métricas */
-        [data-testid="metric-container"] {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0,20,57,0.1);
-            transition: all 0.2s ease-in-out;
-            text-align: center; /* Centraliza as métricas */
-        }
-        [data-testid="metric-container"]:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-            transform: translateY(-3px);
-            border: 1px solid rgba(227, 0, 15, 0.3); /* Destaque vermelho ao passar o mouse */
-        }
-        [data-testid="metric-container"] label {
-            color: #555555 !important;
-            font-weight: 600 !important;
-            font-size: 1rem !important;
-            justify-content: center;
-        }
-        [data-testid="metric-container"] div[data-testid="stMetricValue"] {
-            color: #001439 !important;
-            font-weight: 900 !important;
-            font-size: 2.5rem !important; /* Números maiores e mais visíveis */
-        }
+    /* Cartões de Métricas */
+    [data-testid="metric-container"] {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,20,57,0.1);
+        transition: all 0.2s ease-in-out;
+        text-align: center;
+    }
+    [data-testid="metric-container"]:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+        border: 1px solid rgba(227, 0, 15, 0.3);
+    }
+    [data-testid="metric-container"] label {
+        color: #555555 !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        justify-content: center;
+    }
+    [data-testid="metric-container"] div[data-testid="stMetricValue"] {
+        color: #001439 !important;
+        font-weight: 900 !important;
+        font-size: 2.5rem !important;
+    }
 
-        /* Botão Exportar */
-        div.stButton > button {
-            background-color: #e3000f !important;
-            color: white !important;
-            border-radius: 8px !important;
-            border: none !important;
-            font-weight: 700 !important;
-            padding: 0.6rem 1.5rem !important;
-            box-shadow: 0 4px 6px rgba(227, 0, 15, 0.2);
-            transition: all 0.2s;
-            width: 100%; /* Botão largo para destaque */
-        }
-        div.stButton > button:hover {
-            background-color: #b3000b !important;
-            box-shadow: 0 6px 10px rgba(227, 0, 15, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        /* Animação Multimodal */
-        @keyframes drive {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100vw); }
-        }
-        .transport-animation {
-            animation: drive 25s linear infinite;
-            display: flex;
-            align-items: flex-end;
-            gap: 120px;
-            width: max-content;
-        }
+    /* Botão Exportar */
+    div.stButton > button {
+        background-color: #e3000f !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: none !important;
+        font-weight: 700 !important;
+        padding: 0.6rem 1.5rem !important;
+        box-shadow: 0 4px 6px rgba(227, 0, 15, 0.2);
+        transition: all 0.2s;
+        width: 100%;
+    }
+    div.stButton > button:hover {
+        background-color: #b3000b !important;
+        box-shadow: 0 6px 10px rgba(227, 0, 15, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    /* Animação Multimodal */
+    @keyframes drive {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100vw); }
+    }
+    .transport-animation {
+        animation: drive 25s linear infinite;
+        display: flex;
+        align-items: flex-end;
+        gap: 120px;
+        width: max-content;
+    }
 
-        #MainMenu {visibility: hidden;}
-        .stDeployButton {display: none;}
-    </style>
+    #MainMenu {visibility: hidden;}
+    .stDeployButton {display: none;}
+</style>
 """, unsafe_allow_html=True)
 
 # --- MENU LATERAL ---
 st.sidebar.markdown("""
-    <div style="background-color: transparent; border: 1.5px solid rgba(227, 0, 15, 0.3); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; display: flex; flex-direction: column; align-items: center;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-            <path d="M16.5 14.5 12 17l-4.5-2.5" stroke="#e3000f" stroke-width="2.5"></path>
-            <path d="M16.5 9.5 12 12 7.5 9.5" stroke="#e3000f" stroke-width="2.5"></path>
-        </svg>
-        <span style="color: #ffffff !important; font-weight: 800; font-size: 0.85em; letter-spacing: 1px;">GESTÃO DE ESTOQUE</span>
-    </div>
+<div style="background-color: transparent; border: 1.5px solid rgba(227, 0, 15, 0.3); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; display: flex; flex-direction: column; align-items: center;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        <path d="M16.5 14.5 12 17l-4.5-2.5" stroke="#e3000f" stroke-width="2.5"></path>
+        <path d="M16.5 9.5 12 12 7.5 9.5" stroke="#e3000f" stroke-width="2.5"></path>
+    </svg>
+    <span style="color: #ffffff !important; font-weight: 800; font-size: 0.85em; letter-spacing: 1px;">GESTÃO DE ESTOQUE</span>
+</div>
 """, unsafe_allow_html=True)
 
 st.sidebar.header("⚙️ Filtros da Curva ABC")
@@ -191,81 +191,82 @@ file_sap = st.sidebar.file_uploader("2. Relatório SAP", type=["xlsx"])
 
 # --- CABEÇALHO PRINCIPAL ---
 st.markdown("""
-    <div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
-        <div class="transport-animation">
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 12px;">
-                <path d="M10,20 L45,20 C50,20 55,18 55,15 C55,12 50,15 45,15 L20,15 L10,5 L5,5 L12,15 L5,15 L2,10 L0,10 L2,20 Z" fill="#001439"/>
-                <path d="M25,17 L15,28 L22,28 L32,17 Z" fill="#e3000f"/>
-            </svg>
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="5" width="20" height="22" rx="2" fill="#001439"/>
-                <rect x="12" y="10" width="8" height="6" fill="#f4f6f9"/>
-                <rect x="25" y="12" width="25" height="15" rx="2" fill="#e3000f"/>
-                <rect x="38" y="4" width="6" height="8" fill="#001439"/>
-                <circle cx="12" cy="26" r="4" fill="#e3000f"/>
-                <circle cx="22" cy="26" r="4" fill="#e3000f"/>
-                <circle cx="35" cy="26" r="3" fill="#001439"/>
-                <circle cx="45" cy="26" r="3" fill="#001439"/>
-                <polygon points="50,20 50,27 57,27" fill="#001439"/>
-            </svg>
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="8" width="38" height="18" rx="2" fill="#e3000f"/>
-                <path d="M 42 15 L 48 15 L 53 20 L 53 26 L 42 26 Z" fill="#001439"/>
-                <rect x="42" y="10" width="8" height="16" fill="#001439"/>
-                <circle cx="10" cy="26" r="3" fill="#001439"/>
-                <circle cx="20" cy="26" r="3" fill="#001439"/>
-                <circle cx="32" cy="26" r="3" fill="#001439"/>
-                <circle cx="48" cy="26" r="3" fill="#e3000f"/>
-            </svg>
-            <svg width="50" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="10" width="15" height="15" rx="2" fill="#e3000f"/>
-                <rect x="8" y="2" width="10" height="10" rx="1" fill="none" stroke="#001439" stroke-width="2.5"/>
-                <path d="M 20 25 L 32 25 L 32 15 L 32 8" fill="none" stroke="#001439" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="20" y1="10" x2="20" y2="25" stroke="#001439" stroke-width="2.5"/>
-                <rect x="23" y="15" width="8" height="9" fill="#d2a679" stroke="#8b5a2b" stroke-width="1"/>
-                <line x1="23" y1="19" x2="31" y2="19" stroke="#8b5a2b" stroke-width="1" stroke-dasharray="2,1"/>
-                <circle cx="9" cy="26" r="3" fill="#001439"/>
-                <circle cx="18" cy="26" r="3" fill="#001439"/>
-            </svg>
-        </div>
+<div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
+    <div class="transport-animation">
+        <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 12px;">
+            <path d="M10,20 L45,20 C50,20 55,18 55,15 C55,12 50,15 45,15 L20,15 L10,5 L5,5 L12,15 L5,15 L2,10 L0,10 L2,20 Z" fill="#001439"/>
+            <path d="M25,17 L15,28 L22,28 L32,17 Z" fill="#e3000f"/>
+        </svg>
+        <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="20" height="22" rx="2" fill="#001439"/>
+            <rect x="12" y="10" width="8" height="6" fill="#f4f6f9"/>
+            <rect x="25" y="12" width="25" height="15" rx="2" fill="#e3000f"/>
+            <rect x="38" y="4" width="6" height="8" fill="#001439"/>
+            <circle cx="12" cy="26" r="4" fill="#e3000f"/>
+            <circle cx="22" cy="26" r="4" fill="#e3000f"/>
+            <circle cx="35" cy="26" r="3" fill="#001439"/>
+            <circle cx="45" cy="26" r="3" fill="#001439"/>
+            <polygon points="50,20 50,27 57,27" fill="#001439"/>
+        </svg>
+        <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="8" width="38" height="18" rx="2" fill="#e3000f"/>
+            <path d="M 42 15 L 48 15 L 53 20 L 53 26 L 42 26 Z" fill="#001439"/>
+            <rect x="42" y="10" width="8" height="16" fill="#001439"/>
+            <circle cx="10" cy="26" r="3" fill="#001439"/>
+            <circle cx="20" cy="26" r="3" fill="#001439"/>
+            <circle cx="32" cy="26" r="3" fill="#001439"/>
+            <circle cx="48" cy="26" r="3" fill="#e3000f"/>
+        </svg>
+        <svg width="50" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="10" width="15" height="15" rx="2" fill="#e3000f"/>
+            <rect x="8" y="2" width="10" height="10" rx="1" fill="none" stroke="#001439" stroke-width="2.5"/>
+            <path d="M 20 25 L 32 25 L 32 15 L 32 8" fill="none" stroke="#001439" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="20" y1="10" x2="20" y2="25" stroke="#001439" stroke-width="2.5"/>
+            <rect x="23" y="15" width="8" height="9" fill="#d2a679" stroke="#8b5a2b" stroke-width="1"/>
+            <line x1="23" y1="19" x2="31" y2="19" stroke="#8b5a2b" stroke-width="1" stroke-dasharray="2,1"/>
+            <circle cx="9" cy="26" r="3" fill="#001439"/>
+            <circle cx="18" cy="26" r="3" fill="#001439"/>
+        </svg>
     </div>
-    
-    <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 20px;">
-        <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-            <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
-            <span style="color: #e3000f; font-size: 1.9em;">▲</span>
-        </div>
-        <h1 style="color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px; border-left: 2px solid rgba(0,20,57,0.2); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
+</div>
+
+<div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 20px;">
+    <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+        <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
+        <span style="color: #e3000f; font-size: 1.9em;">▲</span>
     </div>
+    <h1 style="color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px; border-left: 2px solid rgba(0,20,57,0.2); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
+</div>
 """, unsafe_allow_html=True)
 
 
 # --- TELA DE BOAS-VINDAS (Quando não há planilhas) ---
 if file_plan is None or file_sap is None:
+    # OBS: O código HTML não pode ter recuo na esquerda para não virar bloco de código!
     st.markdown("""
-        <div style="background-color: white; padding: 50px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; border: 1px solid rgba(0,20,57,0.1); margin-top: 20px;">
-            <h2 style="color: #001439; font-size: 1.8em; margin-bottom: 10px;">Bem-vindo ao Workspace de Inventário</h2>
-            <p style="color: #555555; font-size: 1.1em; margin-bottom: 40px;">Para iniciar a análise automatizada e gerar os lotes, siga os passos abaixo:</p>
-            
-            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
-                <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
-                    <div style="font-size: 2.5em; margin-bottom: 10px;">📄</div>
-                    <h3 style="color: #e3000f; font-size: 1.3em;">Passo 1</h3>
-                    <p style="color: #333333;">Arraste a <b>Planilha de Planejamento</b> para a primeira área no menu lateral.</p>
-                </div>
-                <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
-                    <div style="font-size: 2.5em; margin-bottom: 10px;">📊</div>
-                    <h3 style="color: #e3000f; font-size: 1.3em;">Passo 2</h3>
-                    <p style="color: #333333;">Arraste o <b>Relatório SAP</b> exportado para a segunda área no menu lateral.</p>
-                </div>
-                <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
-                    <div style="font-size: 2.5em; margin-bottom: 10px;">⚙️</div>
-                    <h3 style="color: #e3000f; font-size: 1.3em;">Passo 3</h3>
-                    <p style="color: #333333;">Ajuste as <b>Capacidades e Metas</b> e deixe o sistema calcular o lote ideal.</p>
-                </div>
-            </div>
+<div style="background-color: white; padding: 50px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; border: 1px solid rgba(0,20,57,0.1); margin-top: 20px;">
+    <h2 style="color: #001439; font-size: 1.8em; margin-bottom: 10px;">Bem-vindo ao Workspace de Inventário</h2>
+    <p style="color: #555555; font-size: 1.1em; margin-bottom: 40px;">Para iniciar a análise automatizada e gerar os lotes, siga os passos abaixo:</p>
+    
+    <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+        <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
+            <div style="font-size: 2.5em; margin-bottom: 10px;">📄</div>
+            <h3 style="color: #e3000f; font-size: 1.3em;">Passo 1</h3>
+            <p style="color: #333333;">Arraste a <b>Planilha de Planejamento</b> para a primeira área no menu lateral.</p>
         </div>
-    """, unsafe_allow_html=True)
+        <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
+            <div style="font-size: 2.5em; margin-bottom: 10px;">📊</div>
+            <h3 style="color: #e3000f; font-size: 1.3em;">Passo 2</h3>
+            <p style="color: #333333;">Arraste o <b>Relatório SAP</b> exportado para a segunda área no menu lateral.</p>
+        </div>
+        <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
+            <div style="font-size: 2.5em; margin-bottom: 10px;">⚙️</div>
+            <h3 style="color: #e3000f; font-size: 1.3em;">Passo 3</h3>
+            <p style="color: #333333;">Ajuste as <b>Capacidades e Metas</b> e deixe o sistema calcular o lote ideal.</p>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 else:
     # --- LÓGICA PRINCIPAL DO SISTEMA ---
     try:
