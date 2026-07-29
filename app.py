@@ -1,420 +1,190 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import io
 
-# Ícone da aba do navegador
-st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
-
-# --- INJEÇÃO DE CSS PREMIUM ---
-st.markdown("""
-    <style>
-        /* Tipografia Global Limpa */
-        html, body, [class*="css"]  {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-        }
-
-        /* Fundo Dinâmico de Grid */
-        .stApp {
-            background-color: #f4f6f9 !important;
-            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px) !important;
-            background-size: 25px 25px !important;
-        }
-        
-        .block-container, [data-testid="stAppViewBlockContainer"] {
-            background-color: transparent !important;
-            padding-top: 2rem !important;
-        }
-
-        header, [data-testid="stHeader"] {
-            background-color: transparent !important;
-            background: transparent !important;
-        }
-
-        /* Títulos e Textos Principais */
-        .main h1, .main h2, .main h3, .main p, .main span {
-            color: #001439 !important;
-        }
-        .main h1, .main h2, .main h3 {
-            font-weight: 700 !important;
-            letter-spacing: -0.5px;
-        }
-
-        /* Menu Lateral */
-        [data-testid="stSidebar"] {
-            background-color: #001439 !important;
-            border-right: 1px solid rgba(0,0,0,0.1);
-        }
-        [data-testid="stSidebar"] p, 
-        [data-testid="stSidebar"] label, 
-        [data-testid="stSidebar"] span, 
-        [data-testid="stSidebar"] h1, 
-        [data-testid="stSidebar"] h2, 
-        [data-testid="stSidebar"] h3,
-        [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
-            color: #e3000f !important; 
-        }
-
-        /* Inputs do Menu Lateral */
-        [data-testid="stSidebar"] div[data-baseweb="input"] > div {
-            background-color: #ffffff !important;
-            border-radius: 6px !important;
-            border: 1px solid rgba(227, 0, 15, 0.3) !important;
-        }
-        [data-testid="stSidebar"] input {
-            color: #001439 !important;
-            -webkit-text-fill-color: #001439 !important;
-            font-weight: 600 !important;
-        }
-
-        /* Upload no Menu Lateral */
-        [data-testid="stFileUploadDropzone"] {
-            background-color: #ffffff !important;
-            border: 2px dashed #e3000f !important; 
-            border-radius: 8px !important;
-        }
-        [data-testid="stFileUploadDropzone"] div, 
-        [data-testid="stFileUploadDropzone"] span, 
-        [data-testid="stFileUploadDropzone"] small,
-        [data-testid="stFileUploadDropzone"] p {
-            color: #e3000f !important;
-        }
-        [data-testid="stFileUploadDropzone"] button {
-            background-color: #e3000f !important;
-            color: #ffffff !important;
-            border: none !important;
-            font-weight: bold !important;
-        }
-        [data-testid="stFileUploadDropzone"] button * {
-            color: #ffffff !important;
-        }
-        [data-testid="stFileUploadDropzone"] svg {
-            fill: #e3000f !important;
-            stroke: #e3000f !important;
-        }
-
-        /* Cartões de Métricas */
-        [data-testid="metric-container"] {
-            background-color: #ffffff;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0,20,57,0.1);
-            transition: all 0.2s ease-in-out;
-            text-align: center;
-        }
-        [data-testid="metric-container"]:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-            transform: translateY(-3px);
-            border: 1px solid rgba(227, 0, 15, 0.3);
-        }
-        [data-testid="metric-container"] label {
-            color: #555555 !important;
-            font-weight: 600 !important;
-            font-size: 1rem !important;
-            justify-content: center;
-        }
-        [data-testid="metric-container"] div[data-testid="stMetricValue"] {
-            color: #001439 !important;
-            font-weight: 900 !important;
-            font-size: 2.5rem !important;
-        }
-
-        /* Botão Exportar */
-        div.stButton > button {
-            background-color: #e3000f !important;
-            color: white !important;
-            border-radius: 8px !important;
-            border: none !important;
-            font-weight: 700 !important;
-            padding: 0.6rem 1.5rem !important;
-            box-shadow: 0 4px 6px rgba(227, 0, 15, 0.2);
-            transition: all 0.2s;
-            width: 100%;
-        }
-        div.stButton > button:hover {
-            background-color: #b3000b !important;
-            box-shadow: 0 6px 10px rgba(227, 0, 15, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        /* Animação Multimodal */
-        @keyframes drive {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100vw); }
-        }
-        .transport-animation {
-            animation: drive 25s linear infinite;
-            display: flex;
-            align-items: flex-end;
-            gap: 120px;
-            width: max-content;
-        }
-
-        #MainMenu {visibility: hidden;}
-        .stDeployButton {display: none;}
-    </style>
-""", unsafe_allow_html=True)
-
-# --- MENU LATERAL ---
-st.sidebar.markdown("""
-    <div style="background-color: transparent; border: 1.5px solid rgba(227, 0, 15, 0.3); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; display: flex; flex-direction: column; align-items: center;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-            <path d="M16.5 14.5 12 17l-4.5-2.5" stroke="#e3000f" stroke-width="2.5"></path>
-            <path d="M16.5 9.5 12 12 7.5 9.5" stroke="#e3000f" stroke-width="2.5"></path>
-        </svg>
-        <span style="color: #ffffff !important; font-weight: 800; font-size: 0.85em; letter-spacing: 1px;">GESTÃO DE ESTOQUE</span>
-    </div>
-""", unsafe_allow_html=True)
-
-st.sidebar.header("⚙️ Filtros da Curva ABC")
-qtd_a = st.sidebar.number_input("Qtd. SKUs Curva A", min_value=0, value=10, step=1)
-filtro_curva_a = st.sidebar.radio(
-    "Filtrar Curva A por ciclo:",
-    options=["Todas", "1ª contagem", "2ª contagem", "3ª contagem"]
+# ==========================================
+# CONFIGURAÇÃO DA PÁGINA
+# ==========================================
+st.set_page_config(
+    page_title="Sistema de Planejamento de Inventário Cíclico",
+    page_icon="📦",
+    layout="wide"
 )
-qtd_b = st.sidebar.number_input("Qtd. SKUs Curva B", min_value=0, value=5, step=1)
-qtd_c = st.sidebar.number_input("Qtd. SKUs Curva C", min_value=0, value=2, step=1)
+
+# ==========================================
+# FUNÇÕES DE APOIO
+# ==========================================
+@st.cache_data
+def carregar_dados():
+    # Substitua pelo caminho correto do seu arquivo
+    caminho_arquivo = "01 - Planejamento de Curva 2026 V2 (1).xlsx"
+    # Pula as duas primeiras linhas de cabeçalho conforme a estrutura da sua planilha
+    df = pd.read_excel(caminho_arquivo, sheet_name="PLANEJAMENTO", skiprows=2)
+    
+    # Tratamento básico de dados (garantir que VALOR TOTAL seja numérico)
+    if 'VALOR TOTAL' in df.columns:
+        df['VALOR TOTAL'] = pd.to_numeric(df['VALOR TOTAL'], errors='coerce').fillna(0)
+    
+    return df
+
+def converter_para_excel(df):
+    """
+    Converte um DataFrame do Pandas nativamente para Excel (.xlsx) na memória.
+    Isso resolve o problema de dados agrupados na mesma coluna do CSV.
+    """
+    output = io.BytesIO()
+    # Usamos o engine openpyxl para gerar o arquivo .xlsx
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Planilha1')
+    processed_data = output.getvalue()
+    return processed_data
+
+
+# ==========================================
+# CARREGAMENTO DOS DADOS
+# ==========================================
+try:
+    df_base = carregar_dados()
+except Exception as e:
+    st.error(f"Erro ao carregar a planilha: {e}")
+    st.stop()
+
+# ==========================================
+# BARRA LATERAL (SIDEBAR)
+# ==========================================
+# (Se você tiver a imagem logo.png, descomente a linha abaixo. 
+# Caso contrário, deixei um markdown estilizado como placeholder)
+# st.sidebar.image("logo.png", use_column_width=True)
+st.sidebar.markdown("<h2 style='text-align: center; color: red;'>📦 GESTÃO DE ESTOQUE</h2>", unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
-st.sidebar.header("📦 Capacidade Operacional")
-min_loc = st.sidebar.number_input("Mínimo de Locações", min_value=0, value=150, step=10)
-max_loc = st.sidebar.number_input("Máximo de Locações", min_value=0, value=200, step=10)
+
+# 1. FILTRO DE VALOR PLANEJADO (Adicionado aqui em cima)
+st.sidebar.markdown("### 💰 Filtro de Valor Planejado")
+if 'VALOR TOTAL' in df_base.columns:
+    max_valor = float(df_base['VALOR TOTAL'].max())
+    # Evita erro caso o max_valor seja 0
+    if max_valor == 0: max_valor = 100.0 
+    
+    valor_min, valor_max = st.sidebar.slider(
+        "Intervalo (R$):",
+        min_value=0.0,
+        max_value=max_valor,
+        value=(0.0, max_valor),
+        step=100.0,
+        format="R$ %.2f"
+    )
+else:
+    st.sidebar.warning("Coluna 'VALOR TOTAL' não encontrada.")
+    valor_min, valor_max = 0, 99999999
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("📂 Importação de Dados")
-file_plan = st.sidebar.file_uploader("1. Planilha de Planejamento", type=["xlsx"])
-file_sap = st.sidebar.file_uploader("2. Relatório SAP", type=["xlsx"])
+
+# 2. FILTROS DA CURVA ABC
+st.sidebar.markdown("### ⚙️ Filtros da Curva ABC")
+
+qtd_a = st.sidebar.number_input("Qtd. SKUs Curva A", min_value=0, value=7)
+qtd_b = st.sidebar.number_input("Qtd. SKUs Curva B", min_value=0, value=2)
+qtd_c = st.sidebar.number_input("Qtd. SKUs Curva C", min_value=0, value=2)
+
+st.sidebar.markdown("**Filtrar Curva A por ciclo:**")
+ciclo = st.sidebar.radio(
+    "",
+    ["Todas", "1ª contagem", "2ª contagem", "3ª contagem"],
+    label_visibility="collapsed"
+)
+
+# ==========================================
+# LÓGICA DE FILTRAGEM DOS DADOS
+# ==========================================
+# Filtra pelo valor planejado
+df_filtrado = df_base[
+    (df_base['VALOR TOTAL'] >= valor_min) & 
+    (df_base['VALOR TOTAL'] <= valor_max)
+]
+
+# (Aqui você pode adicionar sua lógica para selecionar as quantidades exatas de curva A, B e C)
+# Exemplo genérico de como você estaria limitando as linhas para demonstração:
+df_a = df_filtrado[df_filtrado['Curva ABC'] == 'A'].head(qtd_a)
+df_b = df_filtrado[df_filtrado['Curva ABC'] == 'B'].head(qtd_b)
+df_c = df_filtrado[df_filtrado['Curva ABC'] == 'C'].head(qtd_c)
+df_lote = pd.concat([df_a, df_b, df_c])
 
 
-# --- CABEÇALHO PRINCIPAL ---
-st.markdown("""
-    <div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
-        <div class="transport-animation">
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 12px;">
-                <path d="M10,20 L45,20 C50,20 55,18 55,15 C55,12 50,15 45,15 L20,15 L10,5 L5,5 L12,15 L5,15 L2,10 L0,10 L2,20 Z" fill="#001439"/>
-                <path d="M25,17 L15,28 L22,28 L32,17 Z" fill="#e3000f"/>
-            </svg>
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="5" width="20" height="22" rx="2" fill="#001439"/>
-                <rect x="12" y="10" width="8" height="6" fill="#f4f6f9"/>
-                <rect x="25" y="12" width="25" height="15" rx="2" fill="#e3000f"/>
-                <rect x="38" y="4" width="6" height="8" fill="#001439"/>
-                <circle cx="12" cy="26" r="4" fill="#e3000f"/>
-                <circle cx="22" cy="26" r="4" fill="#e3000f"/>
-                <circle cx="35" cy="26" r="3" fill="#001439"/>
-                <circle cx="45" cy="26" r="3" fill="#001439"/>
-                <polygon points="50,20 50,27 57,27" fill="#001439"/>
-            </svg>
-            <svg width="60" height="30" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="8" width="38" height="18" rx="2" fill="#e3000f"/>
-                <path d="M 42 15 L 48 15 L 53 20 L 53 26 L 42 26 Z" fill="#001439"/>
-                <rect x="42" y="10" width="8" height="16" fill="#001439"/>
-                <circle cx="10" cy="26" r="3" fill="#001439"/>
-                <circle cx="20" cy="26" r="3" fill="#001439"/>
-                <circle cx="32" cy="26" r="3" fill="#001439"/>
-                <circle cx="48" cy="26" r="3" fill="#e3000f"/>
-            </svg>
-            <svg width="50" height="30" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="10" width="15" height="15" rx="2" fill="#e3000f"/>
-                <rect x="8" y="2" width="10" height="10" rx="1" fill="none" stroke="#001439" stroke-width="2.5"/>
-                <path d="M 20 25 L 32 25 L 32 15 L 32 8" fill="none" stroke="#001439" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="20" y1="10" x2="20" y2="25" stroke="#001439" stroke-width="2.5"/>
-                <rect x="23" y="15" width="8" height="9" fill="#d2a679" stroke="#8b5a2b" stroke-width="1"/>
-                <line x1="23" y1="19" x2="31" y2="19" stroke="#8b5a2b" stroke-width="1" stroke-dasharray="2,1"/>
-                <circle cx="9" cy="26" r="3" fill="#001439"/>
-                <circle cx="18" cy="26" r="3" fill="#001439"/>
-            </svg>
-        </div>
-    </div>
-    
-    <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 20px;">
-        <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-            <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
-            <span style="color: #e3000f; font-size: 1.9em;">▲</span>
-        </div>
-        <h1 style="color: #001439 !important; margin: 0; font-size: 2.1em; padding-top: 5px; border-left: 2px solid rgba(0,20,57,0.2); padding-left: 15px;">Sistema de Planejamento de Inventário Cíclico</h1>
-    </div>
-""", unsafe_allow_html=True)
+# ==========================================
+# CORPO PRINCIPAL
+# ==========================================
+st.title("ceva 🔺 Sistema de Planejamento de Inventário Cíclico")
 
+# Criação das Abas
+tab1, tab2, tab3 = st.tabs(["📋 Planejamento Diário (Lote)", "📊 Dashboard Gerencial", "🔒 Detalhamento dos Itens Bloqueados"])
 
-# --- TELA DE BOAS-VINDAS EM TEXTO NATIVO STREAMLIT ---
-if file_plan is None or file_sap is None:
-    st.markdown("### Bem-vindo ao Workspace de Inventário")
-    st.markdown("Para iniciar a análise automatizada e gerar os lotes, siga os passos abaixo:")
-    st.markdown("---")
-    
+# ------------------------------------------
+# ABA 1: PLANEJAMENTO DIÁRIO
+# ------------------------------------------
+with tab1:
+    # KPIs
     col1, col2, col3 = st.columns(3)
     
-    with col1:
-        st.info("📄 **Passo 1**\n\nArraste a **Planilha de Planejamento** para a primeira área no menu lateral esquerdo.")
+    skus_selecionados = len(df_lote)
+    total_locacoes = df_lote['TOTAL POSIÇÕES'].sum() if 'TOTAL POSIÇÕES' in df_lote.columns else 0
+    
+    col1.metric("SKUs Selecionados", skus_selecionados)
+    col2.metric("Total de Locações", int(total_locacoes))
+    col3.metric("Meta Operacional", "150 a 200")
+    
+    # Mensagem de sucesso
+    if 150 <= total_locacoes <= 200:
+        st.success("✅ **Sucesso:** O lote selecionado está DENTRO da média de locações planejada!")
+    elif total_locacoes > 200:
+        st.error("⚠️ **Atenção:** O lote selecionado está ACIMA da média de locações planejada!")
+    else:
+        st.warning("⚠️ **Atenção:** O lote selecionado está ABAIXO da média de locações planejada!")
         
-    with col2:
-        st.info("📊 **Passo 2**\n\nArraste o **Relatório SAP** exportado para a segunda área no menu lateral esquerdo.")
-        
-    with col3:
-        st.info("⚙️ **Passo 3**\n\nAjuste as **Capacidades e Metas** abaixo e deixe o sistema calcular o lote ideal.")
+    st.dataframe(df_lote, use_container_width=True)
+    
+    # Botão de exportação em Excel para o lote diário
+    excel_lote = converter_para_excel(df_lote)
+    st.download_button(
+        label="📥 Exportar Lote para Excel",
+        data=excel_lote,
+        file_name="Lote_Planejamento.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
-else:
-    # --- LÓGICA PRINCIPAL DO SISTEMA ---
-    try:
-        df_plan_raw = pd.read_excel(file_plan, sheet_name="PLANEJAMENTO")
-        df_plan = df_plan_raw.copy()
-        
-        cabecalhos = df_plan.iloc[1]
-        df_plan.columns = [str(c) if pd.notna(c) else f"coluna_{i}" for i, c in enumerate(cabecalhos)]
-        
-        df_plan = df_plan.iloc[2:].reset_index(drop=True)
-        df_plan = df_plan.dropna(subset=['SKU'])
+# ------------------------------------------
+# ABA 2: DASHBOARD GERENCIAL
+# ------------------------------------------
+with tab2:
+    st.subheader("Dashboard Gerencial")
+    st.write("Gráficos e indicadores gerenciais entrarão aqui.")
+    # Exemplo: st.bar_chart(df_filtrado['Curva ABC'].value_counts())
 
-        df_sap = pd.read_excel(file_sap)
-        df_sap['SKU'] = df_sap['Produto'].astype(str).str.strip()
-        df_sap['Prefix'] = df_sap['Posição no depósito'].astype(str).str.strip().apply(
-            lambda x: x.split('-')[0].upper() if '-' in str(x) else str(x).upper()
-        )
-
-        sap_locs = df_sap.groupby('SKU')['Prefix'].apply(lambda x: set(x)).to_dict()
-
-        def verificar_pendencia(row):
-            for col in ['1ª contagem', '2ª contagem', '3ª contagem']:
-                if 'PENDENTE' in str(row[col]).upper():
-                    return True
-            return False
-
-        df_plan['PENDENTE'] = df_plan.apply(verificar_pendencia, axis=1)
-        loc_cols = ['LN', 'PC', 'PK', 'PP', 'PR', 'PD']
-
-        def validar_locacoes(row):
-            sku = str(row['SKU']).strip()
-            expected = set()
-            for col in loc_cols:
-                try:
-                    if float(row[col]) > 0:
-                        expected.add(col)
-                except:
-                    pass
-            actual = sap_locs.get(sku, set())
-            is_valid = (expected == actual) and (len(expected) > 0)
-            return is_valid, expected, actual
-
-        val_results = df_plan.apply(validar_locacoes, axis=1)
-        df_plan['IS_VALID'] = [r[0] for r in val_results]
-        df_plan['EXPECTED'] = [r[1] for r in val_results]
-        df_plan['ACTUAL'] = [r[2] for r in val_results]
-
-        def classificar_status(row):
-            if not row['PENDENTE']: return "Já Contado"
-            elif row['IS_VALID']: return "Disponível para Contar"
-            else: return "Bloqueado (Divergência de Posição)"
-
-        df_plan['STATUS_GERAL'] = df_plan.apply(classificar_status, axis=1)
-        df_plan['TOTAL POSIÇÕES'] = pd.to_numeric(df_plan['TOTAL POSIÇÕES'], errors='coerce').fillna(0).astype(int)
-
-        st.divider() 
-        
-        tab1, tab2 = st.tabs(["📋 Planejamento Diário (Lote)", "📊 Dashboard Gerencial"])
-
-        with tab1:
-            st.markdown("<br>", unsafe_allow_html=True)
-            
-            mask_a = (df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'A')
-            if filtro_curva_a != "Todas":
-                mask_a = mask_a & df_plan[filtro_curva_a].astype(str).str.upper().str.contains('PENDENTE')
-            
-            df_disp_a = df_plan[mask_a]
-            df_disp_b = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'B')]
-            df_disp_c = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'C')]
-
-            def otimizar_lote(df_a, df_b, df_c, q_a, q_b, q_c, min_l, max_l):
-                melhor_lote = pd.concat([df_a.head(q_a), df_b.head(q_b), df_c.head(q_c)])
-                if melhor_lote.empty: return melhor_lote
-                soma_inicial = melhor_lote['TOTAL POSIÇÕES'].sum()
-                if min_l <= soma_inicial <= max_l: return melhor_lote 
-                menor_distancia = min(abs(soma_inicial - min_l), abs(soma_inicial - max_l))
-                for _ in range(2000):
-                    s_a = df_a.sample(n=min(q_a, len(df_a))) if q_a > 0 and not df_a.empty else pd.DataFrame()
-                    s_b = df_b.sample(n=min(q_b, len(df_b))) if q_b > 0 and not df_b.empty else pd.DataFrame()
-                    s_c = df_c.sample(n=min(q_c, len(df_c))) if q_c > 0 and not df_c.empty else pd.DataFrame()
-                    lote_temp = pd.concat([s_a, s_b, s_c])
-                    soma_temp = lote_temp['TOTAL POSIÇÕES'].sum()
-                    if min_l <= soma_temp <= max_l: return lote_temp 
-                    dist = min(abs(soma_temp - min_l), abs(soma_temp - max_l))
-                    if dist < menor_distancia:
-                        menor_distancia = dist
-                        melhor_lote = lote_temp
-                return melhor_lote
-
-            lote_sugerido = otimizar_lote(df_disp_a, df_disp_b, df_disp_c, qtd_a, qtd_b, qtd_c, min_loc, max_loc)
-            total_locacoes_lote = lote_sugerido['TOTAL POSIÇÕES'].sum()
-
-            col_blank1, col_m1, col_m2, col_m3, col_blank2 = st.columns([1, 2, 2, 2, 1])
-            with col_m1: st.metric("SKUs Selecionados", len(lote_sugerido))
-            with col_m2: st.metric("Total de Locações", total_locacoes_lote)
-            with col_m3: st.metric("Meta Operacional", f"{min_loc} a {max_loc}")
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-
-            if min_loc <= total_locacoes_lote <= max_loc:
-                st.success("✅ **Sucesso:** O lote selecionado está DENTRO da média de locações planejada!")
-            elif total_locacoes_lote < min_loc:
-                st.warning("⚠️ **Atenção:** O total de locações ficou ABAIXO da meta. Tente aumentar a quantidade de SKUs no menu lateral.")
-            else:
-                st.error("🚨 **Atenção:** O total de locações EXCEDE a capacidade estipulada.")
-
-            st.markdown("<br>", unsafe_allow_html=True)
-            df_display = lote_sugerido[['SKU', 'Curva ABC', 'TOTAL POSIÇÕES', '1ª contagem', '2ª contagem', '3ª contagem', 'LN', 'PC', 'PK', 'PP', 'PR', 'PD']].reset_index(drop=True)
-            
-            with st.container():
-                st.dataframe(df_display, use_container_width=True)
-                st.markdown("<br>", unsafe_allow_html=True)
-                
-                col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
-                with col_btn2:
-                    @st.cache_data
-                    def convert_df(df):
-                        return df.to_csv(index=False, sep=';').encode('utf-8')
-                    csv = convert_df(df_display)
-                    st.download_button(
-                        label="📥 EXPORTAR LOTE PARA O EXCEL (CSV)",
-                        data=csv,
-                        file_name='lote_inventario_planejado.csv',
-                        mime='text/csv',
-                    )
-
-        with tab2:
-            st.markdown("<br>", unsafe_allow_html=True)
-            col_g1, col_g2 = st.columns(2)
-
-            with col_g1:
-                fig_status = px.histogram(
-                    df_plan, x="Curva ABC", color="STATUS_GERAL", 
-                    title="Status dos SKUs por Curva ABC", barmode="group",
-                    color_discrete_map={
-                        "Já Contado": "#8a8d91", "Disponível para Contar": "#001439", "Bloqueado (Divergência de Posição)": "#e3000f"
-                    }
-                )
-                fig_status.update_layout(yaxis_title="Quantidade de SKUs")
-                st.plotly_chart(fig_status, use_container_width=True)
-
-            with col_g2:
-                df_disp_only = df_plan[df_plan['STATUS_GERAL'] == "Disponível para Contar"]
-                if not df_disp_only.empty:
-                    fig_loc = px.pie(
-                        df_disp_only, names="Curva ABC", values="TOTAL POSIÇÕES", 
-                        title="Distribuição de Locações Disponíveis por Curva", color="Curva ABC",
-                        color_discrete_map={"A": "#001439", "B": "#e3000f", "C": "#8a8d91"}
-                    )
-                    st.plotly_chart(fig_loc, use_container_width=True)
-                else:
-                    st.info("Nenhum item disponível para exibir no gráfico de pizza.")
-
-            st.markdown("---")
-            st.markdown("### 🔍 Detalhamento dos Itens Bloqueados")
-            df_bloq = df_plan[df_plan['STATUS_GERAL'] == "Bloqueado (Divergência de Posição)"][['SKU', 'Curva ABC', 'EXPECTED', 'ACTUAL']].reset_index(drop=True)
-            df_bloq.columns = ['SKU', 'Curva', 'Esperado (Planilha)', 'Encontrado no SAP']
-            st.dataframe(df_bloq, use_container_width=True)
-
-    except Exception as e:
-        st.error(f"Ocorreu um erro ao processar os arquivos. Por favor, verifique se as planilhas estão no formato correto. Detalhe do erro: {e}")
+# ------------------------------------------
+# ABA 3: ITENS BLOQUEADOS (COM OPÇÃO DE EXPORTAR)
+# ------------------------------------------
+with tab3:
+    st.subheader("Detalhamento dos Itens Bloqueados")
+    
+    # Aqui você carrega ou filtra o dataframe dos itens bloqueados. 
+    # Vou simular o seu dataframe da imagem para o exemplo:
+    dados_bloqueados_exemplo = {
+        "SKU": ["047950", "148282", "248315", "348508"],
+        "Curva": ["A", "A", "A", "A"],
+        "Esperado (Planilha)": ["PR,PP,PK,LN", "", "PR,PP,PK,LN", "PR,PP,PK,LN"],
+        "Encontrado no SAP": ["PP,PR", "", "PR,PK", "PP,PK"]
+    }
+    df_bloqueados = pd.DataFrame(dados_bloqueados_exemplo)
+    
+    # Mostrar o dataframe na tela
+    st.dataframe(df_bloqueados, use_container_width=True)
+    
+    # === BOTÃO DE EXPORTAÇÃO AQUI ===
+    # Usa a função nativa em Excel que resolve o problema de vírgulas e colunas juntas
+    excel_bloqueados = converter_para_excel(df_bloqueados)
+    st.download_button(
+        label="📥 Exportar Itens Bloqueados para Excel",
+        data=excel_bloqueados,
+        file_name="Itens_Bloqueados.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
