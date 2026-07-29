@@ -8,30 +8,29 @@ st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", l
 # --- INJEÇÃO DE CSS PREMIUM ---
 st.markdown("""
     <style>
-        /* 1. Tipografia Global Limpa */
+        /* Tipografia Global Limpa */
         html, body, [class*="css"]  {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
         }
 
-        /* 2. Fundo Dinâmico de Grid (Padrão de Dashboard de Logística) */
+        /* Fundo Dinâmico de Grid */
         .stApp {
             background-color: #f4f6f9 !important;
             background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px) !important;
             background-size: 25px 25px !important;
         }
         
-        /* Remove a faixa branca central padrão do Streamlit */
         .block-container, [data-testid="stAppViewBlockContainer"] {
             background-color: transparent !important;
+            padding-top: 2rem !important; /* Mais espaço no topo */
         }
 
-        /* CORREÇÃO DO TOPO BRANCO: Deixa o cabeçalho transparente */
         header, [data-testid="stHeader"] {
             background-color: transparent !important;
             background: transparent !important;
         }
 
-        /* Títulos principais da TELA CENTRAL em Azul CEVA */
+        /* Títulos e Textos Principais */
         .main h1, .main h2, .main h3, .main p, .main span {
             color: #001439 !important;
         }
@@ -40,13 +39,11 @@ st.markdown("""
             letter-spacing: -0.5px;
         }
 
-        /* 3. Menu Lateral Azul Marinho com LETRAS VERMELHAS FORTE */
+        /* Menu Lateral */
         [data-testid="stSidebar"] {
             background-color: #001439 !important;
             border-right: 1px solid rgba(0,0,0,0.1);
         }
-        
-        /* Força todos os textos da barra lateral para VERMELHO */
         [data-testid="stSidebar"] p, 
         [data-testid="stSidebar"] label, 
         [data-testid="stSidebar"] span, 
@@ -57,33 +54,30 @@ st.markdown("""
             color: #e3000f !important; 
         }
 
-        /* Campos numéricos de input - Fundo branco para leitura */
+        /* Inputs do Menu Lateral */
         [data-testid="stSidebar"] div[data-baseweb="input"] > div {
             background-color: #ffffff !important;
             border-radius: 6px !important;
             border: 1px solid rgba(227, 0, 15, 0.3) !important;
         }
-        /* Texto que o usuário digita fica em azul escuro */
         [data-testid="stSidebar"] input {
             color: #001439 !important;
             -webkit-text-fill-color: #001439 !important;
             font-weight: 600 !important;
         }
 
-        /* 4. CAIXA DE UPLOAD (Arraste e Solte no Menu Lateral) */
+        /* Upload no Menu Lateral */
         [data-testid="stFileUploadDropzone"] {
             background-color: #ffffff !important;
             border: 2px dashed #e3000f !important; 
             border-radius: 8px !important;
         }
-        /* Textos de Upload em Vermelho */
         [data-testid="stFileUploadDropzone"] div, 
         [data-testid="stFileUploadDropzone"] span, 
         [data-testid="stFileUploadDropzone"] small,
         [data-testid="stFileUploadDropzone"] p {
             color: #e3000f !important;
         }
-        /* Botão interno de procurar arquivo */
         [data-testid="stFileUploadDropzone"] button {
             background-color: #e3000f !important;
             color: #ffffff !important;
@@ -98,106 +92,104 @@ st.markdown("""
             stroke: #e3000f !important;
         }
 
-        /* 5. Cartões de Métricas (Tela Principal) */
+        /* Cartões de Métricas */
         [data-testid="metric-container"] {
             background-color: #ffffff;
             border-radius: 12px;
-            padding: 15px 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0,0,0,0.05);
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0,20,57,0.1);
             transition: all 0.2s ease-in-out;
+            text-align: center; /* Centraliza as métricas */
         }
         [data-testid="metric-container"]:hover {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            border: 1px solid rgba(227, 0, 15, 0.3); /* Destaque vermelho ao passar o mouse */
         }
         [data-testid="metric-container"] label {
             color: #555555 !important;
             font-weight: 600 !important;
-            font-size: 0.95rem !important;
+            font-size: 1rem !important;
+            justify-content: center;
         }
         [data-testid="metric-container"] div[data-testid="stMetricValue"] {
             color: #001439 !important;
-            font-weight: 800 !important;
+            font-weight: 900 !important;
+            font-size: 2.5rem !important; /* Números maiores e mais visíveis */
         }
 
-        /* 6. Botão Primário Exportar */
+        /* Botão Exportar */
         div.stButton > button {
             background-color: #e3000f !important;
             color: white !important;
             border-radius: 8px !important;
             border: none !important;
             font-weight: 700 !important;
-            padding: 0.5rem 1rem !important;
+            padding: 0.6rem 1.5rem !important;
             box-shadow: 0 4px 6px rgba(227, 0, 15, 0.2);
             transition: all 0.2s;
+            width: 100%; /* Botão largo para destaque */
         }
         div.stButton > button:hover {
             background-color: #b3000b !important;
             box-shadow: 0 6px 10px rgba(227, 0, 15, 0.3);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
         
-        /* 7. ANIMAÇÃO DA CADEIA MULTIMODAL (COMBOIO LOGÍSTICO) */
+        /* Animação Multimodal */
         @keyframes drive {
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100vw); }
         }
         .transport-animation {
-            animation: drive 22s linear infinite;
+            animation: drive 25s linear infinite;
             display: flex;
             align-items: flex-end;
             gap: 120px;
             width: max-content;
         }
 
-        /* Limpeza do visual do Streamlit */
         #MainMenu {visibility: hidden;}
         .stDeployButton {display: none;}
     </style>
 """, unsafe_allow_html=True)
 
-# 1. SIDEBAR / MENU LATERAL COM ÍCONE DE ESTOQUE
+# --- MENU LATERAL ---
 st.sidebar.markdown("""
     <div style="background-color: transparent; border: 1.5px solid rgba(227, 0, 15, 0.3); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 25px; margin-top: -15px; display: flex; flex-direction: column; align-items: center;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px;">
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
             <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
             <line x1="12" y1="22.08" x2="12" y2="12"></line>
             <path d="M16.5 14.5 12 17l-4.5-2.5" stroke="#e3000f" stroke-width="2.5"></path>
             <path d="M16.5 9.5 12 12 7.5 9.5" stroke="#e3000f" stroke-width="2.5"></path>
         </svg>
-        <span style="color: #ffffff !important; font-weight: 800; font-size: 0.90em; letter-spacing: 1px;">GESTÃO DE ESTOQUE</span>
+        <span style="color: #ffffff !important; font-weight: 800; font-size: 0.85em; letter-spacing: 1px;">GESTÃO DE ESTOQUE</span>
     </div>
 """, unsafe_allow_html=True)
-st.sidebar.markdown("---")
 
-st.sidebar.header("⚙️ Configurações do Lote")
-
-st.sidebar.subheader("Meta de SKUs por Curva")
+st.sidebar.header("⚙️ Filtros da Curva ABC")
 qtd_a = st.sidebar.number_input("Qtd. SKUs Curva A", min_value=0, value=10, step=1)
-
-# FILTRO DA CURVA A
 filtro_curva_a = st.sidebar.radio(
-    "Filtrar Curva A por ciclo de contagem:",
-    options=["Todas", "1ª contagem", "2ª contagem", "3ª contagem"],
-    help="Define de qual coluna da planilha o sistema deve puxar os itens pendentes da Curva A."
+    "Filtrar Curva A por ciclo:",
+    options=["Todas", "1ª contagem", "2ª contagem", "3ª contagem"]
 )
-
 qtd_b = st.sidebar.number_input("Qtd. SKUs Curva B", min_value=0, value=5, step=1)
 qtd_c = st.sidebar.number_input("Qtd. SKUs Curva C", min_value=0, value=2, step=1)
 
-st.sidebar.subheader("Capacidade de Locações")
+st.sidebar.markdown("---")
+st.sidebar.header("📦 Capacidade Operacional")
 min_loc = st.sidebar.number_input("Mínimo de Locações", min_value=0, value=150, step=10)
 max_loc = st.sidebar.number_input("Máximo de Locações", min_value=0, value=200, step=10)
 
-# UPLOAD DE ARQUIVOS
 st.sidebar.markdown("---")
-st.sidebar.subheader("📂 Upload dos Arquivos")
-file_plan = st.sidebar.file_uploader("Planilha de Planejamento (.xlsx)", type=["xlsx"])
-file_sap = st.sidebar.file_uploader("Relatório SAP (.xlsx)", type=["xlsx"])
+st.sidebar.subheader("📂 Importação de Dados")
+file_plan = st.sidebar.file_uploader("1. Planilha de Planejamento", type=["xlsx"])
+file_sap = st.sidebar.file_uploader("2. Relatório SAP", type=["xlsx"])
 
-# TÍTULO DA PÁGINA PRINCIPAL COM O COMBOIO ANIMADO
+
+# --- CABEÇALHO PRINCIPAL ---
 st.markdown("""
     <div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
         <div class="transport-animation">
@@ -238,7 +230,7 @@ st.markdown("""
         </div>
     </div>
     
-    <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 30px;">
+    <div style="background-color: transparent; display: flex; align-items: center; margin-bottom: 20px;">
         <div style="display: flex; align-items: center; justify-content: center; margin-right: 15px;">
             <span style="font-size: 2.2em; font-weight: 900; color: #001439; margin-right: 5px; letter-spacing: -1.5px;">ceva</span>
             <span style="color: #e3000f; font-size: 1.9em;">▲</span>
@@ -247,11 +239,36 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+
+# --- TELA DE BOAS-VINDAS (Quando não há planilhas) ---
 if file_plan is None or file_sap is None:
-    st.info("👈 Por favor, faça o upload das duas planilhas no menu lateral para iniciar a análise.")
+    st.markdown("""
+        <div style="background-color: white; padding: 50px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); text-align: center; border: 1px solid rgba(0,20,57,0.1); margin-top: 20px;">
+            <h2 style="color: #001439; font-size: 1.8em; margin-bottom: 10px;">Bem-vindo ao Workspace de Inventário</h2>
+            <p style="color: #555555; font-size: 1.1em; margin-bottom: 40px;">Para iniciar a análise automatizada e gerar os lotes, siga os passos abaixo:</p>
+            
+            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">📄</div>
+                    <h3 style="color: #e3000f; font-size: 1.3em;">Passo 1</h3>
+                    <p style="color: #333333;">Arraste a <b>Planilha de Planejamento</b> para a primeira área no menu lateral.</p>
+                </div>
+                <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">📊</div>
+                    <h3 style="color: #e3000f; font-size: 1.3em;">Passo 2</h3>
+                    <p style="color: #333333;">Arraste o <b>Relatório SAP</b> exportado para a segunda área no menu lateral.</p>
+                </div>
+                <div style="background: #f8fafc; padding: 25px; border-radius: 10px; width: 300px; border: 2px dashed #cbd5e1;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">⚙️</div>
+                    <h3 style="color: #e3000f; font-size: 1.3em;">Passo 3</h3>
+                    <p style="color: #333333;">Ajuste as <b>Capacidades e Metas</b> e deixe o sistema calcular o lote ideal.</p>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 else:
+    # --- LÓGICA PRINCIPAL DO SISTEMA ---
     try:
-        # CARREGAR E TRATAR PLANILHA DE PLANEJAMENTO
         df_plan_raw = pd.read_excel(file_plan, sheet_name="PLANEJAMENTO")
         df_plan = df_plan_raw.copy()
         
@@ -261,7 +278,6 @@ else:
         df_plan = df_plan.iloc[2:].reset_index(drop=True)
         df_plan = df_plan.dropna(subset=['SKU'])
 
-        # CARREGAR E TRATAR RELATÓRIO SAP
         df_sap = pd.read_excel(file_sap)
         df_sap['SKU'] = df_sap['Produto'].astype(str).str.strip()
         df_sap['Prefix'] = df_sap['Posição no depósito'].astype(str).str.strip().apply(
@@ -277,7 +293,6 @@ else:
             return False
 
         df_plan['PENDENTE'] = df_plan.apply(verificar_pendencia, axis=1)
-
         loc_cols = ['LN', 'PC', 'PK', 'PP', 'PR', 'PD']
 
         def validar_locacoes(row):
@@ -289,7 +304,6 @@ else:
                         expected.add(col)
                 except:
                     pass
-            
             actual = sap_locs.get(sku, set())
             is_valid = (expected == actual) and (len(expected) > 0)
             return is_valid, expected, actual
@@ -300,16 +314,15 @@ else:
         df_plan['ACTUAL'] = [r[2] for r in val_results]
 
         def classificar_status(row):
-            if not row['PENDENTE']:
-                return "Já Contado"
-            elif row['IS_VALID']:
-                return "Disponível para Contar"
-            else:
-                return "Bloqueado (Divergência de Posição)"
+            if not row['PENDENTE']: return "Já Contado"
+            elif row['IS_VALID']: return "Disponível para Contar"
+            else: return "Bloqueado (Divergência de Posição)"
 
         df_plan['STATUS_GERAL'] = df_plan.apply(classificar_status, axis=1)
         df_plan['TOTAL POSIÇÕES'] = pd.to_numeric(df_plan['TOTAL POSIÇÕES'], errors='coerce').fillna(0).astype(int)
 
+        st.divider() # Adiciona uma linha sutil para separar o cabeçalho do conteúdo
+        
         tab1, tab2 = st.tabs(["📋 Planejamento Diário (Lote)", "📊 Dashboard Gerencial"])
 
         with tab1:
@@ -325,82 +338,73 @@ else:
 
             def otimizar_lote(df_a, df_b, df_c, q_a, q_b, q_c, min_l, max_l):
                 melhor_lote = pd.concat([df_a.head(q_a), df_b.head(q_b), df_c.head(q_c)])
-                if melhor_lote.empty:
-                    return melhor_lote
-                    
+                if melhor_lote.empty: return melhor_lote
                 soma_inicial = melhor_lote['TOTAL POSIÇÕES'].sum()
-                if min_l <= soma_inicial <= max_l:
-                    return melhor_lote 
-                
+                if min_l <= soma_inicial <= max_l: return melhor_lote 
                 menor_distancia = min(abs(soma_inicial - min_l), abs(soma_inicial - max_l))
-                
                 for _ in range(2000):
                     s_a = df_a.sample(n=min(q_a, len(df_a))) if q_a > 0 and not df_a.empty else pd.DataFrame()
                     s_b = df_b.sample(n=min(q_b, len(df_b))) if q_b > 0 and not df_b.empty else pd.DataFrame()
                     s_c = df_c.sample(n=min(q_c, len(df_c))) if q_c > 0 and not df_c.empty else pd.DataFrame()
-                    
                     lote_temp = pd.concat([s_a, s_b, s_c])
                     soma_temp = lote_temp['TOTAL POSIÇÕES'].sum()
-                    
-                    if min_l <= soma_temp <= max_l:
-                        return lote_temp 
-                    
+                    if min_l <= soma_temp <= max_l: return lote_temp 
                     dist = min(abs(soma_temp - min_l), abs(soma_temp - max_l))
                     if dist < menor_distancia:
                         menor_distancia = dist
                         melhor_lote = lote_temp
-                        
                 return melhor_lote
 
             lote_sugerido = otimizar_lote(df_disp_a, df_disp_b, df_disp_c, qtd_a, qtd_b, qtd_c, min_loc, max_loc)
             total_locacoes_lote = lote_sugerido['TOTAL POSIÇÕES'].sum()
 
-            col_m1, col_m2, col_m3 = st.columns(3)
-            col_m1.metric("SKUs Selecionados", len(lote_sugerido))
-            col_m2.metric("Total de Locações do Lote", total_locacoes_lote)
-            col_m3.metric("Meta de Locações", f"{min_loc} - {max_loc}")
+            # Métricas Centralizadas com Design de Cartão
+            col_blank1, col_m1, col_m2, col_m3, col_blank2 = st.columns([1, 2, 2, 2, 1])
+            with col_m1: st.metric("SKUs Selecionados", len(lote_sugerido))
+            with col_m2: st.metric("Total de Locações", total_locacoes_lote)
+            with col_m3: st.metric("Meta Operacional", f"{min_loc} a {max_loc}")
             
             st.markdown("<br>", unsafe_allow_html=True)
 
             if min_loc <= total_locacoes_lote <= max_loc:
-                st.success("✅ O lote selecionado está DENTRO da média de locações planejada!")
+                st.success("✅ **Sucesso:** O lote selecionado está DENTRO da média de locações planejada!")
             elif total_locacoes_lote < min_loc:
-                st.warning("⚠️ Atenção: Mesmo testando milhares de combinações, o total de locações ficou ABAIXO da meta. Tente aumentar a quantidade de SKUs.")
+                st.warning("⚠️ **Atenção:** O total de locações ficou ABAIXO da meta. Tente aumentar a quantidade de SKUs no menu lateral.")
             else:
-                st.error("🚨 Atenção: O total de locações EXCEDE a capacidade estipulada.")
+                st.error("🚨 **Atenção:** O total de locações EXCEDE a capacidade estipulada.")
 
             st.markdown("<br>", unsafe_allow_html=True)
             df_display = lote_sugerido[['SKU', 'Curva ABC', 'TOTAL POSIÇÕES', '1ª contagem', '2ª contagem', '3ª contagem', 'LN', 'PC', 'PK', 'PP', 'PR', 'PD']].reset_index(drop=True)
-            st.dataframe(df_display, use_container_width=True)
-
-            @st.cache_data
-            def convert_df(df):
-                return df.to_csv(index=False, sep=';').encode('utf-8')
-
-            csv = convert_df(df_display)
-            st.download_button(
-                label="📥 Exportar Lote Planejado (CSV)",
-                data=csv,
-                file_name='lote_inventario_planejado.csv',
-                mime='text/csv',
-            )
+            
+            # Container estilizado para a tabela e o botão
+            with st.container():
+                st.dataframe(df_display, use_container_width=True)
+                st.markdown("<br>", unsafe_allow_html=True)
+                
+                # O botão exportar agora fica contido em colunas para não esticar na tela toda
+                col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
+                with col_btn2:
+                    @st.cache_data
+                    def convert_df(df):
+                        return df.to_csv(index=False, sep=';').encode('utf-8')
+                    csv = convert_df(df_display)
+                    st.download_button(
+                        label="📥 EXPORTAR LOTE PARA O EXCEL (CSV)",
+                        data=csv,
+                        file_name='lote_inventario_planejado.csv',
+                        mime='text/csv',
+                    )
 
         with tab2:
             st.markdown("<br>", unsafe_allow_html=True)
-            
             col_g1, col_g2 = st.columns(2)
 
             with col_g1:
                 fig_status = px.histogram(
-                    df_plan, 
-                    x="Curva ABC", 
-                    color="STATUS_GERAL", 
-                    title="Status dos SKUs por Curva ABC",
-                    barmode="group",
+                    df_plan, x="Curva ABC", color="STATUS_GERAL", 
+                    title="Status dos SKUs por Curva ABC", barmode="group",
                     color_discrete_map={
-                        "Já Contado": "#8a8d91",
-                        "Disponível para Contar": "#001439",
-                        "Bloqueado (Divergência de Posição)": "#e3000f"
+                        "Já Contado": "#8a8d91", "Disponível para Contar": "#001439", "Bloqueado (Divergência de Posição)": "#e3000f"
                     }
                 )
                 fig_status.update_layout(yaxis_title="Quantidade de SKUs")
@@ -408,19 +412,11 @@ else:
 
             with col_g2:
                 df_disp_only = df_plan[df_plan['STATUS_GERAL'] == "Disponível para Contar"]
-                
                 if not df_disp_only.empty:
                     fig_loc = px.pie(
-                        df_disp_only, 
-                        names="Curva ABC", 
-                        values="TOTAL POSIÇÕES", 
-                        title="Distribuição de Locações Disponíveis por Curva",
-                        color="Curva ABC",
-                        color_discrete_map={
-                            "A": "#001439",
-                            "B": "#e3000f",
-                            "C": "#8a8d91"
-                        }
+                        df_disp_only, names="Curva ABC", values="TOTAL POSIÇÕES", 
+                        title="Distribuição de Locações Disponíveis por Curva", color="Curva ABC",
+                        color_discrete_map={"A": "#001439", "B": "#e3000f", "C": "#8a8d91"}
                     )
                     st.plotly_chart(fig_loc, use_container_width=True)
                 else:
