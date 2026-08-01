@@ -1,9 +1,29 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import streamlit.components.v1 as components
 
 # Ícone da aba do navegador
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
+
+# --- ESCUDO JAVASCRIPT: DESATIVAR ATALHOS DE TECLADO DO STREAMLIT (Evita popup ao copiar) ---
+components.html(
+    """
+    <script>
+    const doc = window.parent.document;
+    doc.addEventListener('keydown', function(e) {
+        if (e.key.toLowerCase() === 'c' || e.key.toLowerCase() === 'r') {
+            if (e.ctrlKey || e.metaKey) return;
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }, true);
+    </script>
+    """,
+    height=0,
+    width=0,
+)
 
 # --- LOGO DO MENU LATERAL (Sempre no topo) ---
 st.sidebar.markdown("""
@@ -356,9 +376,15 @@ else:
 
         sap_locs = df_sap.groupby('SKU')['Prefix'].apply(lambda x: set(x)).to_dict()
 
+        # NOVA LÓGICA DINÂMICA DE PENDÊNCIA
         def verificar_pendencia(row):
+            curva = str(row.get('Curva ABC', '')).strip().upper()
+            if curva == 'A' and filtro_curva_a != "Todas":
+                if 'PENDENTE' in str(row.get(filtro_curva_a, '')).upper():
+                    return True
+                return False
             for col in ['1ª contagem', '2ª contagem', '3ª contagem']:
-                if 'PENDENTE' in str(row[col]).upper():
+                if col in row and 'PENDENTE' in str(row[col]).upper():
                     return True
             return False
 
