@@ -23,6 +23,11 @@ st.sidebar.markdown("""
 modo_escuro = st.sidebar.toggle("🌙 Modo Escuro", value=False)
 st.sidebar.markdown("---")
 
+# --- REGRA DE MÍNIMO POR SKU ---
+st.sidebar.header("🎯 Regras por SKU")
+min_pos_sku = st.sidebar.number_input("Mín. de Locações por SKU", min_value=1, value=3, step=1)
+st.sidebar.markdown("---")
+
 # Definição das variáveis de cores baseadas no tema escolhido
 if modo_escuro:
     tema_css = """
@@ -252,7 +257,6 @@ st.sidebar.subheader("📂 Importação de Dados")
 file_plan = st.sidebar.file_uploader("1. Planilha de Planejamento", type=["xlsx"])
 file_sap = st.sidebar.file_uploader("2. Relatório SAP", type=["xlsx"])
 
-
 # --- CABEÇALHO PRINCIPAL ---
 st.markdown("""
 <div style="width: 100%; overflow: hidden; height: 45px; margin-top: -30px; margin-bottom: 0px;">
@@ -303,8 +307,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
-# --- TELA DE BOAS-VINDAS BLINDADA (Totalmente colada à esquerda para evitar bugs de markdown) ---
+# --- TELA DE BOAS-VINDAS BLINDADA ---
 if file_plan is None or file_sap is None:
     st.markdown("""
 <div class="welcome-container">
@@ -395,13 +398,14 @@ else:
         with tab1:
             st.markdown("<br>", unsafe_allow_html=True)
             
-            mask_a = (df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'A')
+            # Aplicação da regra do MÍNIMO DE POSIÇÕES POR SKU (min_pos_sku) na filtragem
+            mask_a = (df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'A') & (df_plan['TOTAL POSIÇÕES'] >= min_pos_sku)
             if filtro_curva_a != "Todas":
                 mask_a = mask_a & df_plan[filtro_curva_a].astype(str).str.upper().str.contains('PENDENTE')
             
             df_disp_a = df_plan[mask_a]
-            df_disp_b = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'B')]
-            df_disp_c = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'C')]
+            df_disp_b = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'B') & (df_plan['TOTAL POSIÇÕES'] >= min_pos_sku)]
+            df_disp_c = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'C') & (df_plan['TOTAL POSIÇÕES'] >= min_pos_sku)]
 
             def otimizar_lote(df_a, df_b, df_c, q_a, q_b, q_c, min_l, max_l):
                 melhor_lote = pd.concat([df_a.head(q_a), df_b.head(q_b), df_c.head(q_c)])
