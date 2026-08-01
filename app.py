@@ -1,29 +1,9 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import streamlit.components.v1 as components
 
 # Ícone da aba do navegador
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
-
-# --- ESCUDO JAVASCRIPT: DESATIVAR ATALHOS DE TECLADO DO STREAMLIT (Evita popup ao copiar) ---
-components.html(
-    """
-    <script>
-    const doc = window.parent.document;
-    doc.addEventListener('keydown', function(e) {
-        if (e.key.toLowerCase() === 'c' || e.key.toLowerCase() === 'r') {
-            if (e.ctrlKey || e.metaKey) return;
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    }, true);
-    </script>
-    """,
-    height=0,
-    width=0,
-)
 
 # --- LOGO DO MENU LATERAL (Sempre no topo) ---
 st.sidebar.markdown("""
@@ -327,7 +307,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- TELA DE BOAS-VINDAS BLINDADA ---
+# --- TELA DE BOAS-VINDAS ---
 if file_plan is None or file_sap is None:
     st.markdown("""
 <div class="welcome-container">
@@ -376,7 +356,6 @@ else:
 
         sap_locs = df_sap.groupby('SKU')['Prefix'].apply(lambda x: set(x)).to_dict()
 
-        # NOVA LÓGICA DINÂMICA DE PENDÊNCIA
         def verificar_pendencia(row):
             curva = str(row.get('Curva ABC', '')).strip().upper()
             if curva == 'A' and filtro_curva_a != "Todas":
@@ -424,7 +403,6 @@ else:
         with tab1:
             st.markdown("<br>", unsafe_allow_html=True)
             
-            # Aplicação da regra do MÍNIMO DE POSIÇÕES POR SKU (min_pos_sku) na filtragem
             mask_a = (df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'A') & (df_plan['TOTAL POSIÇÕES'] >= min_pos_sku)
             if filtro_curva_a != "Todas":
                 mask_a = mask_a & df_plan[filtro_curva_a].astype(str).str.upper().str.contains('PENDENTE')
@@ -478,10 +456,8 @@ else:
                 
                 col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
                 with col_btn2:
-                    @st.cache_data
-                    def convert_df(df):
-                        return df.to_csv(index=False, sep=';').encode('utf-8')
-                    csv = convert_df(df_display)
+                    # REMOVIDO: O comando de Cache foi excluído para evitar a tela de "Clear Cache"
+                    csv = df_display.to_csv(index=False, sep=';').encode('utf-8')
                     st.download_button(
                         label="📥 EXPORTAR LOTE PARA O EXCEL (CSV)",
                         data=csv,
