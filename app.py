@@ -246,6 +246,7 @@ filtro_curva_a = st.sidebar.radio(
 )
 qtd_b = st.sidebar.number_input("Qtd. SKUs Curva B", min_value=0, value=5, step=1)
 qtd_c = st.sidebar.number_input("Qtd. SKUs Curva C", min_value=0, value=2, step=1)
+qtd_l = st.sidebar.number_input("Qtd. SKUs Curva L", min_value=0, value=2, step=1)
 
 st.sidebar.markdown("---")
 st.sidebar.header("📦 Capacidade Operacional")
@@ -410,9 +411,10 @@ else:
             df_disp_a = df_plan[mask_a]
             df_disp_b = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'B') & (df_plan['TOTAL POSIÇÕES'] >= min_pos_sku)]
             df_disp_c = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'C') & (df_plan['TOTAL POSIÇÕES'] >= min_pos_sku)]
+            df_disp_l = df_plan[(df_plan['STATUS_GERAL'] == "Disponível para Contar") & (df_plan['Curva ABC'] == 'L') & (df_plan['TOTAL POSIÇÕES'] >= min_pos_sku)]
 
-            def otimizar_lote(df_a, df_b, df_c, q_a, q_b, q_c, min_l, max_l):
-                melhor_lote = pd.concat([df_a.head(q_a), df_b.head(q_b), df_c.head(q_c)])
+            def otimizar_lote(df_a, df_b, df_c, df_l, q_a, q_b, q_c, q_l, min_l, max_l):
+                melhor_lote = pd.concat([df_a.head(q_a), df_b.head(q_b), df_c.head(q_c), df_l.head(q_l)])
                 if melhor_lote.empty: return melhor_lote
                 soma_inicial = melhor_lote['TOTAL POSIÇÕES'].sum()
                 if min_l <= soma_inicial <= max_l: return melhor_lote 
@@ -421,7 +423,8 @@ else:
                     s_a = df_a.sample(n=min(q_a, len(df_a))) if q_a > 0 and not df_a.empty else pd.DataFrame()
                     s_b = df_b.sample(n=min(q_b, len(df_b))) if q_b > 0 and not df_b.empty else pd.DataFrame()
                     s_c = df_c.sample(n=min(q_c, len(df_c))) if q_c > 0 and not df_c.empty else pd.DataFrame()
-                    lote_temp = pd.concat([s_a, s_b, s_c])
+                    s_l = df_l.sample(n=min(q_l, len(df_l))) if q_l > 0 and not df_l.empty else pd.DataFrame()
+                    lote_temp = pd.concat([s_a, s_b, s_c, s_l])
                     soma_temp = lote_temp['TOTAL POSIÇÕES'].sum()
                     if min_l <= soma_temp <= max_l: return lote_temp 
                     dist = min(abs(soma_temp - min_l), abs(soma_temp - max_l))
@@ -430,7 +433,7 @@ else:
                         melhor_lote = lote_temp
                 return melhor_lote
 
-            lote_sugerido = otimizar_lote(df_disp_a, df_disp_b, df_disp_c, qtd_a, qtd_b, qtd_c, min_loc, max_loc)
+            lote_sugerido = otimizar_lote(df_disp_a, df_disp_b, df_disp_c, df_disp_l, qtd_a, qtd_b, qtd_c, qtd_l, min_loc, max_loc)
             total_locacoes_lote = lote_sugerido['TOTAL POSIÇÕES'].sum()
 
             col_blank1, col_m1, col_m2, col_m3, col_blank2 = st.columns([1, 2, 2, 2, 1])
@@ -456,7 +459,6 @@ else:
                 
                 col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
                 with col_btn2:
-                    # REMOVIDO: O comando de Cache foi excluído para evitar a tela de "Clear Cache"
                     csv = df_display.to_csv(index=False, sep=';').encode('utf-8')
                     st.download_button(
                         label="📥 EXPORTAR LOTE PARA O EXCEL (CSV)",
@@ -488,7 +490,7 @@ else:
                         df_disp_only, names="Curva ABC", values="TOTAL POSIÇÕES", 
                         title="Distribuição de Locações Disponíveis por Curva", color="Curva ABC",
                         template=grafico_tema,
-                        color_discrete_map={"A": "#001439" if not modo_escuro else "#1f77b4", "B": "#e3000f", "C": "#8a8d91"}
+                        color_discrete_map={"A": "#001439" if not modo_escuro else "#1f77b4", "B": "#e3000f", "C": "#8a8d91", "L": "#f39c12"}
                     )
                     st.plotly_chart(fig_loc, use_container_width=True)
                 else:
