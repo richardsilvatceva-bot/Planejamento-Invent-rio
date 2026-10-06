@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import datetime
 
 # Ícone da aba do navegador
 st.set_page_config(page_title="Inventário Cíclico | CEVA", page_icon="🔺", layout="wide")
@@ -21,6 +22,13 @@ st.sidebar.markdown("""
 
 # --- BOTÃO DE MODO ESCURO / CLARO ---
 modo_escuro = st.sidebar.toggle("🌙 Modo Escuro", value=False)
+st.sidebar.markdown("---")
+
+# --- DATA DE PLANEJAMENTO ---
+st.sidebar.header("📅 Data do Planejamento")
+# Define automaticamente para o dia seguinte (D+1)
+data_plan_default = datetime.date.today() + datetime.timedelta(days=1)
+data_planejamento = st.sidebar.date_input("Planejar Lote para o dia:", value=data_plan_default)
 st.sidebar.markdown("---")
 
 # --- REGRA DE MÍNIMO POR SKU ---
@@ -357,6 +365,31 @@ else:
 
         sap_locs = df_sap.groupby('SKU')['Prefix'].apply(lambda x: set(x)).to_dict()
 
+        # --- LÓGICA DE BLOQUEIO POR DATA (1 MÊS ANTES) ---
+        cols_contagem = ['1ª contagem', '2ª contagem', '3ª contagem']
+        for col in cols_contagem:
+            if col in df_plan.columns:
+                # Converte para data, forçando erros (como 'PENDENTE' ou '-') a virarem NaT (Not a Time)
+                df_plan[f'{col}_dt'] = pd.to_datetime(df_plan[col], errors='coerce', dayfirst=True)
+                
+        # Encontra a maior data (última contagem realizada) dentre as 3 colunas
+        colunas_dt = [f'{col}_dt' for col in cols_contagem if f'{col}_dt' in df_plan.columns]
+        df_plan['Ultima_Contagem_Realizada'] = df_plan[colunas_dt].max(axis=1)
+        
+        # Define os limites de data (Planejamento menos 30 dias)
+        data_plan_pd = pd.to_datetime(data_planejamento)
+        data_limite = data_plan_pd - pd.Timedelta(days=30)
+        
+        def check_recent(row):
+            ultima = row['Ultima_Contagem_Realizada']
+            if pd.notna(ultima):
+                # Se a última contagem ocorreu há menos de 30 dias a partir da data de planejamento
+                if ultima >= data_limite:
+                    return True
+            return False
+            
+        df_plan['BLOQUEIO_DATA'] = df_plan.apply(check_recent, axis=1)
+
         def verificar_pendencia(row):
             curva = str(row.get('Curva ABC', '')).strip().upper()
             if curva == 'A' and filtro_curva_a != "Todas":
@@ -389,8 +422,10 @@ else:
         df_plan['EXPECTED'] = [r[1] for r in val_results]
         df_plan['ACTUAL'] = [r[2] for r in val_results]
 
+        # --- CLASSIFICAÇÃO ATUALIZADA COM O NOVO BLOQUEIO ---
         def classificar_status(row):
-            if not row['PENDENTE']: return "Já Contado"
+            if row.get('BLOQUEIO_DATA', False): return "Bloqueado (Contagem Recente)"
+            elif not row['PENDENTE']: return "Já Contado"
             elif row['IS_VALID']: return "Disponível para Contar"
             else: return "Bloqueado (Divergência de Posição)"
 
@@ -399,7 +434,8 @@ else:
 
         st.divider() 
         
-        tab1, tab2 = st.tabs(["📋 Planejamento Diário (Lote)", "📊 Dashboard Gerencial"])
+        # --- NOVO MENU DE ABAS ---
+        tab1, tab2, tab3 = st.tabs(["📋 Planejamento Diário (Lote)", "📊 Dashboard Gerencial", "⏱️ Bloqueios Recentes"])
 
         with tab1:
             st.markdown("<br>", unsafe_allow_html=True)
@@ -477,7 +513,10 @@ else:
                     title="Status dos SKUs por Curva ABC", barmode="group",
                     template=grafico_tema,
                     color_discrete_map={
-                        "Já Contado": "#8a8d91", "Disponível para Contar": "#001439" if not modo_escuro else "#1f77b4", "Bloqueado (Divergência de Posição)": "#e3000f"
+                        "Já Contado": "#8a8d91", 
+                        "Disponível para Contar": "#001439" if not modo_escuro else "#1f77b4", 
+                        "Bloqueado (Divergência de Posição)": "#e3000f",
+                        "Bloqueado (Contagem Recente)": "#e67e22" # Laranja vibrante
                     }
                 )
                 fig_status.update_layout(yaxis_title="Quantidade de SKUs")
@@ -497,10 +536,29 @@ else:
                     st.info("Nenhum item disponível para exibir no gráfico de pizza.")
 
             st.markdown("---")
-            st.markdown("### 🔍 Detalhamento dos Itens Bloqueados")
+            st.markdown("### 🔍 Detalhamento dos Itens Bloqueados por Divergência")
             df_bloq = df_plan[df_plan['STATUS_GERAL'] == "Bloqueado (Divergência de Posição)"][['SKU', 'Curva ABC', 'EXPECTED', 'ACTUAL']].reset_index(drop=True)
             df_bloq.columns = ['SKU', 'Curva', 'Esperado (Planilha)', 'Encontrado no SAP']
             st.dataframe(df_bloq, use_container_width=True)
+
+        # --- NOVA ABA: ITENS BLOQUEADOS POR DATA ---
+        with tab3:
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("### ⏱️ Itens Retidos por Contagem Recente (Menos de 30 dias)")
+            st.write(f"**Data base para o planejamento:** {data_plan_pd.strftime('%d/%m/%Y')} | **Data de corte (30 dias):** {data_limite.strftime('%d/%m/%Y')}")
+            
+            df_bloq_data = df_plan[df_plan['STATUS_GERAL'] == "Bloqueado (Contagem Recente)"]
+            
+            if not df_bloq_data.empty:
+                # Formatando a tabela para exibição limpa
+                df_bloq_data_exibicao = df_bloq_data[['SKU', 'Curva ABC', 'Ultima_Contagem_Realizada', '1ª contagem', '2ª contagem', '3ª contagem']].copy()
+                df_bloq_data_exibicao['Ultima_Contagem_Realizada'] = df_bloq_data_exibicao['Ultima_Contagem_Realizada'].dt.strftime('%d/%m/%Y')
+                df_bloq_data_exibicao.columns = ['SKU', 'Curva ABC', 'Data da Última Contagem', '1ª contagem', '2ª contagem', '3ª contagem']
+                
+                st.dataframe(df_bloq_data_exibicao, use_container_width=True)
+                st.info(f"Total de itens bloqueados por este critério: **{len(df_bloq_data)} itens**")
+            else:
+                st.success("Nenhum item foi barrado por contagem recente para este planejamento.")
 
     except Exception as e:
         st.error(f"Ocorreu um erro ao processar os arquivos. Por favor, verifique se as planilhas estão no formato correto. Detalhe do erro: {e}")
