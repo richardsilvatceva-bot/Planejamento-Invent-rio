@@ -365,25 +365,24 @@ else:
 
         sap_locs = df_sap.groupby('SKU')['Prefix'].apply(lambda x: set(x)).to_dict()
 
-        # --- LÓGICA DE BLOQUEIO POR DATA (1 MÊS ANTES) ---
+        # --- LÓGICA DE BLOQUEIO POR DATA (APENAS INCOMPLETOS) ---
         cols_contagem = ['1ª contagem', '2ª contagem', '3ª contagem']
         for col in cols_contagem:
             if col in df_plan.columns:
-                # Converte para data, forçando erros (como 'PENDENTE' ou '-') a virarem NaT (Not a Time)
                 df_plan[f'{col}_dt'] = pd.to_datetime(df_plan[col], errors='coerce', dayfirst=True)
                 
-        # Encontra a maior data (última contagem realizada) dentre as 3 colunas
         colunas_dt = [f'{col}_dt' for col in cols_contagem if f'{col}_dt' in df_plan.columns]
         df_plan['Ultima_Contagem_Realizada'] = df_plan[colunas_dt].max(axis=1)
         
-        # Define os limites de data (Planejamento menos 30 dias)
         data_plan_pd = pd.to_datetime(data_planejamento)
         data_limite = data_plan_pd - pd.Timedelta(days=30)
         
         def check_recent(row):
             ultima = row['Ultima_Contagem_Realizada']
-            if pd.notna(ultima):
-                # Se a última contagem ocorreu há menos de 30 dias a partir da data de planejamento
+            # APENAS barra quem estiver com "INCOMPLETO" na coluna de Observações
+            obs = str(row.get('Observações', '')).strip().upper()
+            
+            if pd.notna(ultima) and obs == 'INCOMPLETO':
                 if ultima >= data_limite:
                     return True
             return False
@@ -422,7 +421,6 @@ else:
         df_plan['EXPECTED'] = [r[1] for r in val_results]
         df_plan['ACTUAL'] = [r[2] for r in val_results]
 
-        # --- CLASSIFICAÇÃO ATUALIZADA COM O NOVO BLOQUEIO ---
         def classificar_status(row):
             if row.get('BLOQUEIO_DATA', False): return "Bloqueado (Contagem Recente)"
             elif not row['PENDENTE']: return "Já Contado"
@@ -434,7 +432,6 @@ else:
 
         st.divider() 
         
-        # --- NOVO MENU DE ABAS ---
         tab1, tab2, tab3 = st.tabs(["📋 Planejamento Diário (Lote)", "📊 Dashboard Gerencial", "⏱️ Bloqueios Recentes"])
 
         with tab1:
@@ -511,29 +508,40 @@ else:
                 fig_status = px.histogram(
                     df_plan, x="Curva ABC", color="STATUS_GERAL", 
                     title="Status dos SKUs por Curva ABC", barmode="group",
+                    text_auto=True, # Força rótulos nas barras
                     template=grafico_tema,
                     color_discrete_map={
                         "Já Contado": "#8a8d91", 
                         "Disponível para Contar": "#001439" if not modo_escuro else "#1f77b4", 
                         "Bloqueado (Divergência de Posição)": "#e3000f",
-                        "Bloqueado (Contagem Recente)": "#e67e22" # Laranja vibrante
+                        "Bloqueado (Contagem Recente)": "#e67e22" 
                     }
                 )
                 fig_status.update_layout(yaxis_title="Quantidade de SKUs")
+                fig_status.update_traces(textposition='outside', textfont_size=13) # Rótulos visíveis por fora
                 st.plotly_chart(fig_status, use_container_width=True)
 
             with col_g2:
-                df_disp_only = df_plan[df_plan['STATUS_GERAL'] == "Disponível para Contar"]
-                if not df_disp_only.empty:
-                    fig_loc = px.pie(
-                        df_disp_only, names="Curva ABC", values="TOTAL POSIÇÕES", 
-                        title="Distribuição de Locações Disponíveis por Curva", color="Curva ABC",
+                # --- NOVO GRÁFICO: SKUs pendentes e SEM SALDO (0 Posições) ---
+                df_sem_saldo = df_plan[(df_plan['PENDENTE'] == True) & (df_plan['TOTAL POSIÇÕES'] == 0)]
+                
+                if not df_sem_saldo.empty:
+                    df_zero_grp = df_sem_saldo.groupby("Curva ABC").size().reset_index(name="Qtd SKUs")
+                    
+                    fig_zero = px.bar(
+                        df_zero_grp, x="Curva ABC", y="Qtd SKUs", 
+                        title="SKUs Pendentes sem Saldo (0 Posições)", 
+                        color="Curva ABC",
+                        text="Qtd SKUs", # Força a exibição dos valores nas barras
                         template=grafico_tema,
                         color_discrete_map={"A": "#001439" if not modo_escuro else "#1f77b4", "B": "#e3000f", "C": "#8a8d91", "L": "#f39c12"}
                     )
-                    st.plotly_chart(fig_loc, use_container_width=True)
+                    fig_zero.update_layout(yaxis_title="Quantidade de SKUs", showlegend=False)
+                    fig_zero.update_traces(textposition='outside', textfont_size=14) # Mantém visível sem precisar do hover
+                    
+                    st.plotly_chart(fig_zero, use_container_width=True)
                 else:
-                    st.info("Nenhum item disponível para exibir no gráfico de pizza.")
+                    st.info("Nenhum SKU pendente sem saldo no momento.")
 
             st.markdown("---")
             st.markdown("### 🔍 Detalhamento dos Itens Bloqueados por Divergência")
@@ -541,7 +549,6 @@ else:
             df_bloq.columns = ['SKU', 'Curva', 'Esperado (Planilha)', 'Encontrado no SAP']
             st.dataframe(df_bloq, use_container_width=True)
 
-        # --- NOVA ABA: ITENS BLOQUEADOS POR DATA ---
         with tab3:
             st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("### ⏱️ Itens Retidos por Contagem Recente (Menos de 30 dias)")
@@ -550,15 +557,28 @@ else:
             df_bloq_data = df_plan[df_plan['STATUS_GERAL'] == "Bloqueado (Contagem Recente)"]
             
             if not df_bloq_data.empty:
-                # Formatando a tabela para exibição limpa
                 df_bloq_data_exibicao = df_bloq_data[['SKU', 'Curva ABC', 'Ultima_Contagem_Realizada', '1ª contagem', '2ª contagem', '3ª contagem']].copy()
+                
+                # --- FORMATAÇÃO DE DATA (DD/MM/AAAA) SEM HORAS ---
+                def formata_data_br(x):
+                    if pd.isna(x) or str(x).strip() in ['-', 'PENDENTE']:
+                        return str(x)
+                    dt = pd.to_datetime(x, errors='coerce')
+                    if pd.notna(dt):
+                        return dt.strftime('%d/%m/%Y')
+                    return str(x)
+                
                 df_bloq_data_exibicao['Ultima_Contagem_Realizada'] = df_bloq_data_exibicao['Ultima_Contagem_Realizada'].dt.strftime('%d/%m/%Y')
+                
+                for col in ['1ª contagem', '2ª contagem', '3ª contagem']:
+                    df_bloq_data_exibicao[col] = df_bloq_data_exibicao[col].apply(formata_data_br)
+                    
                 df_bloq_data_exibicao.columns = ['SKU', 'Curva ABC', 'Data da Última Contagem', '1ª contagem', '2ª contagem', '3ª contagem']
                 
                 st.dataframe(df_bloq_data_exibicao, use_container_width=True)
-                st.info(f"Total de itens bloqueados por este critério: **{len(df_bloq_data)} itens**")
+                st.info(f"Total de itens marcados como INCOMPLETO retidos por este critério: **{len(df_bloq_data)} itens**")
             else:
-                st.success("Nenhum item foi barrado por contagem recente para este planejamento.")
+                st.success("Nenhum item INCOMPLETO foi barrado por contagem recente para este planejamento.")
 
     except Exception as e:
         st.error(f"Ocorreu um erro ao processar os arquivos. Por favor, verifique se as planilhas estão no formato correto. Detalhe do erro: {e}")
