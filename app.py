@@ -350,9 +350,20 @@ else:
         df_plan_raw = pd.read_excel(file_plan, sheet_name="PLANEJAMENTO")
         df_plan = df_plan_raw.copy()
         
-        cabecalhos = df_plan.iloc[1]
-        df_plan.columns = [str(c) if pd.notna(c) else f"coluna_{i}" for i, c in enumerate(cabecalhos)]
-        
+        # Leitura dos cabeçalhos com tratamento para colunas duplicadas (ex: Validação)
+        raw_cabecalhos = df_plan.iloc[1]
+        col_names = []
+        counts = {}
+        for i, c in enumerate(raw_cabecalhos):
+            c_str = str(c).strip() if pd.notna(c) else f"coluna_{i}"
+            if c_str in counts:
+                counts[c_str] += 1
+                col_names.append(f"{c_str}_{counts[c_str]}")
+            else:
+                counts[c_str] = 0
+                col_names.append(c_str)
+                
+        df_plan.columns = col_names
         df_plan = df_plan.iloc[2:].reset_index(drop=True)
         df_plan = df_plan.dropna(subset=['SKU'])
 
@@ -413,7 +424,6 @@ else:
             pendente = row['PENDENTE']
             is_valid = row['IS_VALID']
             
-            # Condição: É pendente, tem saldo/locação válida no SAP, E foi contado a menos de 30 dias
             if pd.notna(ultima) and pendente and is_valid:
                 if ultima >= data_limite:
                     return True
@@ -522,7 +532,6 @@ else:
                 st.plotly_chart(fig_status, use_container_width=True)
 
             with col_g2:
-                # --- GRÁFICO DE BARRAS: SKUs pendentes e SEM SALDO ---
                 df_sem_saldo = df_plan[(df_plan['PENDENTE'] == True) & (df_plan['TOTAL POSIÇÕES'] == 0)]
                 
                 if not df_sem_saldo.empty:
@@ -542,7 +551,6 @@ else:
                     fig_zero.update_layout(
                         yaxis_title="Quantidade de SKUs", 
                         showlegend=False,
-                        # Adiciona o Total no canto superior esquerdo do gráfico
                         annotations=[
                             dict(
                                 x=0.01, y=1.1, xref='paper', yref='paper',
