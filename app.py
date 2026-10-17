@@ -350,7 +350,7 @@ else:
         df_plan_raw = pd.read_excel(file_plan, sheet_name="PLANEJAMENTO")
         df_plan = df_plan_raw.copy()
         
-        # Leitura dos cabeçalhos com tratamento para colunas duplicadas (ex: Validação)
+        # Leitura dos cabeçalhos tratando colunas com nomes idênticos
         raw_cabecalhos = df_plan.iloc[1]
         col_names = []
         counts = {}
@@ -486,8 +486,25 @@ else:
             
             st.markdown("<br>", unsafe_allow_html=True)
 
+            # --- CONTAGEM REALIZADA x SOLICITADA POR CURVA ---
+            qtd_a_lote = len(lote_sugerido[lote_sugerido['Curva ABC'] == 'A'])
+            qtd_b_lote = len(lote_sugerido[lote_sugerido['Curva ABC'] == 'B'])
+            qtd_c_lote = len(lote_sugerido[lote_sugerido['Curva ABC'] == 'C'])
+            qtd_l_lote = len(lote_sugerido[lote_sugerido['Curva ABC'] == 'L'])
+
+            curvas_incompletas = []
+            if qtd_a_lote < qtd_a: curvas_incompletas.append(f"Curva A (disponíveis: {qtd_a_lote} / solicitados: {qtd_a})")
+            if qtd_b_lote < qtd_b: curvas_incompletas.append(f"Curva B (disponíveis: {qtd_b_lote} / solicitados: {qtd_b})")
+            if qtd_c_lote < qtd_c: curvas_incompletas.append(f"Curva C (disponíveis: {qtd_c_lote} / solicitados: {qtd_c})")
+            if qtd_l_lote < qtd_l: curvas_incompletas.append(f"Curva L (disponíveis: {qtd_l_lote} / solicitados: {qtd_l})")
+
+            # --- MENSAGENS DE STATUS (VERDE, LARANJA OU VERMELHO) ---
             if min_loc <= total_locacoes_lote <= max_loc:
-                st.success("✅ **Sucesso:** O lote selecionado está DENTRO da média de locações planejada!")
+                if len(curvas_incompletas) == 0:
+                    st.success("✅ **Sucesso:** O lote selecionado atende a meta de locações e a todas as quantidades solicitadas por curva!")
+                else:
+                    detalhes_fatia = ", ".join(curvas_incompletas)
+                    st.warning(f"⚠️ **AtENÇÃO (LOTE PARCIAL):** O total de locações ({total_locacoes_lote}) está na meta, porém não há SKUs suficientes disponíveis no banco de dados para todas as curvas solicitadas. Faltaram: **{detalhes_fatia}**.")
             elif total_locacoes_lote < min_loc:
                 st.warning("⚠️ **Atenção:** O total de locações ficou ABAIXO da meta. Tente aumentar a quantidade de SKUs no menu lateral.")
             else:
